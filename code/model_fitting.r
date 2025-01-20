@@ -1,5 +1,14 @@
 
-## model fitting for meta analysis -- insect data
+##---------------------------------------------------------------
+## Model Fitting for Meta Analysis
+## Demo with Insect Data
+##
+## Jacob Levine; 1/20/25
+##---------------------------------------------------------------
+
+##---------------------------------------------------------------
+## 0. Head
+##---------------------------------------------------------------
 
 ## libraries
 library("metafor")
@@ -8,14 +17,16 @@ library("brms")
 library("ggplot2")
 
 ## read data
-insect_data <- read.csv("../data/insect_data.csv")
+insect_data <- read.csv("data/insect_data.csv")
 
 ## rename columns with egregiously long names
 colnames(insect_data)[33] <- "grouping_flags"
 
 ##---------------------------------------------------------------
-## 1. Merge data
+## 1. Group data
 ##---------------------------------------------------------------
+
+## TODO Move functions to separate file, leave here now for readability
 
 ## define functions
 overall_mean <- function(mean, n) {
@@ -97,7 +108,7 @@ group_data <- function(data, remove_zeros = FALSE, add_constant = FALSE) {
   return(data_grouped)
 }
 
-## NEED TO CHECK STUDY 306:
+## TODO CHECK STUDY 306:
 ## one of the controls has 0 sd, but positive mean with n = 4. Seems unlikely?
 
 ## run grouping script
@@ -199,13 +210,13 @@ insect_data_grouped$lrr_se <- lrr_se(insect_data_grouped$mean_treatment,
 ## using the data from that disturbance type. A third option which may or may not
 ## be okay is to perform MICE on N copies of the full dataset (all disturbances)
 ## and then split these by disturbance and run the analysis models, pooling
-## results by disturbance. I ~feel~ like this is okay, but not 100% sure.
+## results by disturbance. I *feel* like this is okay, but not 100% sure.
 
 ## For this demo, let's just try it with a single predictor:
 ## 1) treatment class (thinning vs. rx fire vs. both)
 
-## to do this we first need to categorize each treatment, as they all have
-## crazy names
+## to do this we first need to categorize each treatment, as they dont have
+## standardized names
 
 cat_trt <- function(trt) {
   if ((grepl("burn", tolower(trt)) | grepl("fire", tolower(trt))) &
@@ -214,13 +225,13 @@ cat_trt <- function(trt) {
   else if (grepl("thin", tolower(trt)) | grepl("density", tolower(trt))) return("thinning")
   else return(NA)
 }
-## need to check what "Fifty (50) UMZ (low density stand)" means,
+## TODO check what "Fifty (50) UMZ (low density stand)" means,
 ## assume thin for now
 
-
-## also lets just look at mortality for now
-## so again we need to clean up the response column
-## short on time so not going to deal with all the various non-mortality variables
+## also lets just look at mortality for now, ignoring biomass/carbon data
+## so again we need to clean up the responseVariable column
+## TODO deal with all the various non-mortality variables,
+## short on atm so going to leave as is
 cat_response <- function(response) {
   if (grepl("mort", tolower(response))) return("mortality")
   else return(NA)
@@ -232,19 +243,19 @@ for (i in 1:nrow(insect_data_grouped)) {
 }
 insect_data_grouped$trt_class ## looks correct
 
-## first step is to remove all extra columns:
+## remove all extra columns, so we have clean dataset:
 mice_data <- insect_data_grouped[!is.na(insect_data_grouped$response_class),
                                  c("lrr", "lrr_se", "trt_class")]
 mice_data$trt_class <- as.factor(mice_data$trt_class) ## ensure factor encoded correctly
 
-## make predicor matrix
+## make predictor matrix
 predictor_matrix <- make.predictorMatrix(mice_data)
 predictor_matrix ## looks good
 
 impute_method <- make.method(mice_data)
 impute_method ## no method specified for complete variables
 
-
+## impute data
 imputed_data <- mice(mice_data,
                      m = 20,
                      predictorMatrix = predictor_matrix,
@@ -257,7 +268,7 @@ str(imputed_data) ## looks good
 ## 4. Run models
 ##---------------------------------------------------------------
 
-## we are going to try two different methods, frequentist and bayes just for fun
+## we are going to try two different methods, frequentist and Bayes, just for fun
 
 ## frequentist first, using 'metafor'
 freq_fit <- with(imputed_data,
@@ -268,7 +279,9 @@ freq_fit <- with(imputed_data,
 ## now bayes
 ## takes a minute (or 5)
 bayes_fit <- brm_multiple(lrr | se(lrr_se) ~ trt_class, data = imputed_data,
-                          chains = 4, cores = 4)
+                          chains = 4, cores = 4,
+                          silent = 2, refresh = 0,
+                          open_progress = FALSE)
 
 ##---------------------------------------------------------------
 ## 5. Results
@@ -282,8 +295,8 @@ pool
 
 ## then bayes
 ## intestingly, the HMC fit shows clear positive effect of rx fire,
-## meaning that both thin and both (fire + thin) treatments result in
-## reductions in mortality
+## a clearly negative intercept (rx fire + thin), and a negative but unclear
+## effect of thinning alone.
 summary(bayes_fit)
 plot(bayes_fit)
 
