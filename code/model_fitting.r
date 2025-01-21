@@ -21,6 +21,7 @@ insect_data <- read.csv("data/insect_data.csv")
 
 ## rename columns with egregiously long names
 colnames(insect_data)[33] <- "grouping_flags"
+colnames(insect_data)[28] <- "carbon_or_mortality"
 
 ##---------------------------------------------------------------
 ## 1. Group data
@@ -108,20 +109,8 @@ group_data <- function(data, remove_zeros = FALSE, add_constant = FALSE) {
   return(data_grouped)
 }
 
-## TODO CHECK STUDY 306:
-## one of the controls has 0 sd, but positive mean with n = 4. Seems unlikely?
-
 ## run grouping script
 insect_data_grouped <- group_data(insect_data)
-
-## This includes some standard errors in the grouping which were entered as 0
-## We can either A: leave as is, or
-
-## B. remove all observations with SE=0
-insect_data_grouped_nozeros <- group_data(insect_data, remove_zeros = TRUE)
-
-## C. add very small number to se and sd that equal zero
-insect_data_grouped_wconst <- group_data(insect_data, add_constant = TRUE)
 
 ##---------------------------------------------------------------
 ## 2. Calculate effect sizes and standard errors
@@ -144,6 +133,10 @@ insect_data_grouped$lrr <- lrr(insect_data_grouped$mean_treatment,
                                insect_data_grouped$mean_control)
 ## produces NaNs and -Inf when treatment mean is 0. Need to decide what
 ## to do here, but for now I will toss them.
+
+## TODO try flipping to survivorship, and do sensitivity analysis when
+## adding small numbers. If models are sensitive, use mean dif for
+## mortality
 
 ## There is also a weird NA for treatment_mean, will toss that row too.
 
@@ -232,10 +225,6 @@ cat_trt <- function(trt) {
 ## so again we need to clean up the responseVariable column
 ## TODO deal with all the various non-mortality variables,
 ## short on atm so going to leave as is
-cat_response <- function(response) {
-  if (grepl("mort", tolower(response))) return("mortality")
-  else return(NA)
-}
 
 insect_data_grouped$burn <- "no"
 insect_data_grouped$thin <- "no"
@@ -249,12 +238,11 @@ for (i in 1:nrow(insect_data_grouped)) {
     insect_data_grouped[i,"thin"] <- "yes"
     insect_data_grouped[i,"burn"] <- "yes"
   }
-  insect_data_grouped[i,"response_class"] <- cat_response(insect_data_grouped[i,"responseVariable"])
 }
 insect_data_grouped$trt_class ## looks correct
 
 ## remove all extra columns, so we have clean dataset:
-mice_data <- insect_data_grouped[!is.na(insect_data_grouped$response_class),
+mice_data <- insect_data_grouped[insect_data_grouped$carbon_or_mortality == 2,
                                  c("lrr", "lrr_se", "trt_class")]
 mice_data$trt_class <- as.factor(mice_data$trt_class) ## ensure factor encoded correctly
 
@@ -288,7 +276,8 @@ freq_fit <- with(imputed_data,
 
 ## now bayes
 ## takes a minute (or 5)
-bayes_fit <- brm_multiple(lrr | se(lrr_se) ~ trt_class, data = imputed_data,
+bayes_fit <- brm_multiple(lrr | se(lrr_se) ~ trt_class,
+                          data = imputed_data,
                           chains = 4, cores = 4,
                           silent = 2, refresh = 0,
                           open_progress = FALSE)
