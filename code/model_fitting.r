@@ -237,8 +237,18 @@ cat_response <- function(response) {
   else return(NA)
 }
 
+insect_data_grouped$burn <- "no"
+insect_data_grouped$thin <- "no"
 for (i in 1:nrow(insect_data_grouped)) {
   insect_data_grouped[i,"trt_class"] <- cat_trt(insect_data_grouped[i,"treatment"])
+  if (insect_data_grouped[i,"trt_class"] == "thinning") {
+    insect_data_grouped[i,"thin"] <- "yes"
+  } else if (insect_data_grouped[i,"trt_class"] == "rx_fire") {
+    insect_data_grouped[i,"burn"] <- "yes"
+  } else if (insect_data_grouped[i,"trt_class"] == "both") {
+    insect_data_grouped[i,"thin"] <- "yes"
+    insect_data_grouped[i,"burn"] <- "yes"
+  }
   insect_data_grouped[i,"response_class"] <- cat_response(insect_data_grouped[i,"responseVariable"])
 }
 insect_data_grouped$trt_class ## looks correct
