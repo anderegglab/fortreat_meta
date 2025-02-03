@@ -20,6 +20,6 @@ Meta-analysis of the effect of forest treatments on ecosystem response to distur
 - [x] (jacob) understand MICE requirements for data
 - [ ] (everyone) determine ideal set of predictors for MICE routines
 - [ ] (purna, cedric, libby) group treatment classes for basal area removed prediction
-
+- [ ] (everybody) create a branch
 
 
