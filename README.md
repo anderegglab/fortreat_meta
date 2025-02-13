@@ -11,7 +11,7 @@ Meta-analysis of the effect of forest treatments on ecosystem response to distur
 #### Papers
 
 - [ ] (fire team) Ritchie et al 2007, can BA removed be found from different study
-- [ ] (tegan) Goodwin 2020, figure out carbon reporting using supplemental dataset
+- [x] (tegan) Goodwin 2020, figure out carbon reporting using supplemental dataset
 
 #### Analysis
 
