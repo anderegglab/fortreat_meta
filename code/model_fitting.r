@@ -10,12 +10,9 @@
 ## 0. Head
 ##---------------------------------------------------------------
 
-## libraries
-library("metafor")
-library("mice")
-library("brms")
-library("ggplot2")
+# delete the libary and move them to a separate file
 
+source("library_load.R")
 source("functions.r")
 
 ## read data
