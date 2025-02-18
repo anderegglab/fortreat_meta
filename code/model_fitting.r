@@ -1,9 +1,7 @@
 
 ##---------------------------------------------------------------
 ## Model Fitting for Meta Analysis
-## Demo with Insect Data
 ##
-## Jacob Levine; 1/20/25
 ##---------------------------------------------------------------
 
 ##---------------------------------------------------------------
@@ -16,51 +14,13 @@ library("mice")
 library("brms")
 library("ggplot2")
 
-source("functions.r")
+source("code/functions.r")
 
 ## read data
-insect_data <- read.csv("data/insect_data.csv")
-
-## rename columns with egregiously long names
-colnames(insect_data)[33] <- "grouping_flags"
-colnames(insect_data)[28] <- "carbon_or_mortality"
+data <- read.csv("data/processed_data/data_cleaned.csv")
 
 ##---------------------------------------------------------------
-## 1. Group data
-##---------------------------------------------------------------
-
-## TODO Move functions to separate file, leave here now for readability
-## run grouping script
-insect_data_grouped <- group_data(insect_data)
-
-##---------------------------------------------------------------
-## 2. Calculate effect sizes and standard errors
-##---------------------------------------------------------------
-## calculate log response ratio
-insect_data_grouped$lrr <- lrr(insect_data_grouped$mean_treatment,
-                               insect_data_grouped$mean_control)
-## produces NaNs and -Inf when treatment mean is 0. Need to decide what
-## to do here, but for now I will toss them.
-
-## TODO try flipping to survivorship, and do sensitivity analysis when
-## adding small numbers. If models are sensitive, use mean dif for
-## mortality
-
-## There is also a weird NA for treatment_mean, will toss that row too.
-
-insect_data_grouped <- insect_data_grouped[!is.nan(insect_data_grouped$lrr) &
-                                           !is.na(insect_data_grouped$lrr) &
-                                           insect_data_grouped$lrr != -Inf,]
-
-## calculate se
-insect_data_grouped$lrr_se <- lrr_se(insect_data_grouped$mean_treatment,
-                               insect_data_grouped$mean_control,
-                               insect_data_grouped$se_treatment,
-                               insect_data_grouped$se_control)
-## NAs remain NAs (missing values in og data)
-
-##---------------------------------------------------------------
-## 3. Impute missing data
+## 1. Impute missing data
 ##---------------------------------------------------------------
 
 ## There are lots of missing standard errors, and
@@ -94,25 +54,6 @@ insect_data_grouped$lrr_se <- lrr_se(insect_data_grouped$mean_treatment,
 ## random forest imputation, we do not have to specify interaction
 ## terms or nonliinear relationships manually.
 
-## Another wrinkle: "every relationship included in the analysis model
-## needs to be included in the imputation model regardless of whether
-## they contain missing values or not." This means that we cannot
-## actually perform the imputation until we know what predictors we would
-## like to include in the analysis model. It also creates an issue
-## with imputing BA removed. If we want to include additional data from
-## other disturbance types when imputing BA removed, that data needs to be
-## used for predicting any other missing values, AND it needs to be included
-## in the model we eventually fit to analyze the data. Because we were
-## planning to use separate models to analyze each disturbance type, this
-## poses a problem. Two solutions I see are that are definitely kosher are: 1)
-## fit everything in a single modeling framework, where there is an interaction
-## between each dependent variable and a categorical variable describing the
-## disturbance type; or 2) only predict the BA removed in each disturbance type
-## using the data from that disturbance type. A third option which may or may not
-## be okay is to perform MICE on N copies of the full dataset (all disturbances)
-## and then split these by disturbance and run the analysis models, pooling
-## results by disturbance. I *feel* like this is okay, but not 100% sure.
-
 ## For this demo, let's just try it with a single predictor:
 ## 1) treatment class (thinning vs. rx fire vs. both)
 
@@ -120,53 +61,70 @@ insect_data_grouped$lrr_se <- lrr_se(insect_data_grouped$mean_treatment,
 ## standardized names
 
 cat_trt <- function(trt) {
-  if ((grepl("burn", tolower(trt)) | grepl("fire", tolower(trt))) &
-      (grepl("thin", tolower(trt)) | grepl("density", tolower(trt)))) return("both")
-  else if(grepl("burn", tolower(trt)) | grepl("fire", tolower(trt))) return("rx_fire")
-  else if (grepl("thin", tolower(trt)) | grepl("density", tolower(trt))) return("thinning")
+  if (((grepl("burn", tolower(trt)) | grepl("fire", tolower(trt))) & !grepl("unburn", tolower(trt))) &
+      (grepl("thin", tolower(trt)) | grepl("density", tolower(trt)) | grepl("umz", tolower(trt)))) return("both")
+  else if((grepl("burn", tolower(trt)) | grepl("fire", tolower(trt))) & !grepl("unburn", tolower(trt))) return("rx_fire")
+  else if(grepl("thin", tolower(trt)) | grepl("density", tolower(trt)) | grepl("umz", tolower(trt)))
+    return("thinning")
   else return(NA)
 }
-## TODO check what "Fifty (50) UMZ (low density stand)" means,
-## assume thin for now
 
 ## also lets just look at mortality for now, ignoring biomass/carbon data
 ## so again we need to clean up the responseVariable column
-## TODO deal with all the various non-mortality variables,
-## short on atm so going to leave as is
+## TODO deal with all the various non-mortality variables
 
-insect_data_grouped$burn <- "no"
-insect_data_grouped$thin <- "no"
-for (i in 1:nrow(insect_data_grouped)) {
-  insect_data_grouped[i,"trt_class"] <- cat_trt(insect_data_grouped[i,"treatment"])
-  if (insect_data_grouped[i,"trt_class"] == "thinning") {
-    insect_data_grouped[i,"thin"] <- "yes"
-  } else if (insect_data_grouped[i,"trt_class"] == "rx_fire") {
-    insect_data_grouped[i,"burn"] <- "yes"
-  } else if (insect_data_grouped[i,"trt_class"] == "both") {
-    insect_data_grouped[i,"thin"] <- "yes"
-    insect_data_grouped[i,"burn"] <- "yes"
+data$burn <- "no"
+data$thin <- "no"
+for (i in 1:nrow(data)) {
+  print(i)
+  data[i,"trt_class"] <- cat_trt(data[i,"treatment"])
+  if (!is.na(data[i, "trt_class"])) {
+    if (data[i,"trt_class"] == "thinning") {
+      data[i,"thin"] <- "yes"
+    } else if (data[i,"trt_class"] == "rx_fire") {
+      data[i,"burn"] <- "yes"
+    } else if (data[i,"trt_class"] == "both") {
+      data[i,"thin"] <- "yes"
+      data[i,"burn"] <- "yes"
+    }
   }
 }
-insect_data_grouped$trt_class ## looks correct
+data$trt_class ## looks correct
 
-## remove all extra columns, so we have clean dataset:
-mice_data <- insect_data_grouped[insect_data_grouped$carbon_or_mortality == 2,
-                                 c("lrr", "lrr_se", "trt_class")]
-mice_data$trt_class <- as.factor(mice_data$trt_class) ## ensure factor encoded correctly
+## remove na trt_class for now
+## TODO go back to studies and figure out the uncertain trt_classes
+## specifically, studies 72 and 419 have confusing treatment descriptions
+data <- data[!is.na(data$trt_class),]
 
-## make predictor matrix
-predictor_matrix <- make.predictorMatrix(mice_data)
-predictor_matrix ## looks good
+data$trt_class <- factor(data$trt_class, levels = c("rx_fire", "thinning", "both"))
 
-impute_method <- make.method(mice_data)
-impute_method ## no method specified for complete variables
+## TODO move to functions file, keep here now for readability
+impute_data <- function(data, vars = c("lrr", "lrr_se", "trt_class")) {
 
-## impute data
-imputed_data <- mice(mice_data,
-                     m = 20,
-                     predictorMatrix = predictor_matrix,
-                     method = impute_method,
-                     seed = 1)
+  mice_data <- data[, vars]
+
+  ## make predictor matrix
+  predictor_matrix <- make.predictorMatrix(mice_data)
+  predictor_matrix ## looks good
+
+  impute_method <- make.method(mice_data)
+  impute_method ## no method specified for complete variables
+
+  ## impute data
+  imputed_data <- mice(mice_data,
+                       m = 20,
+                       predictorMatrix = predictor_matrix,
+                       method = impute_method,
+                       seed = 1)
+
+  return(imputed_data)
+
+}
+
+
+fire_imputed <- impute_data(data[data$disturbance_type == "fire" & data$carbon_vs_mortality == 2,])
+insect_imputed <- impute_data(data[data$disturbance_type == "insect" & data$carbon_vs_mortality == 2,])
+drought_imputed <- impute_data(data[data$disturbance_type == "drought" & data$carbon_vs_mortality == 2,])
 
 str(imputed_data) ## looks good
 
@@ -177,34 +135,75 @@ str(imputed_data) ## looks good
 ## we are going to try two different methods, frequentist and Bayes, just for fun
 
 ## frequentist first, using 'metafor'
-freq_fit <- with(imputed_data,
-                 rma(yi = lrr,
-                     sei = lrr_se,
-                     mods = ~ trt_class))
+freq_fit_fire <- with(fire_imputed,
+                      rma(yi = lrr,
+                          sei = lrr_se,
+                          mods = ~ trt_class))
+saveRDS(freq_fit_fire, "data/model_objects/freq_fit_fire.rds")
+
+freq_fit_insect <- with(insect_imputed,
+                      rma(yi = lrr,
+                          sei = lrr_se,
+                          mods = ~ trt_class))
+saveRDS(freq_fit_insect, "data/model_objects/freq_fit_insect.rds")
+
+freq_fit_drought <- with(drought_imputed,
+                         rma(yi = lrr,
+                             sei = lrr_se,
+                             mods = ~ trt_class))
+saveRDS(freq_fit_drought, "data/model_objects/freq_fit_drought.rds")
 
 ## now bayes
-## takes a minute (or 5)
-bayes_fit <- brm_multiple(lrr | se(lrr_se) ~ trt_class,
-                          data = imputed_data,
-                          chains = 4, cores = 4,
-                          silent = 2, refresh = 0,
-                          open_progress = FALSE)
+## Commenting this out for now -- lets keep it simple.
+## if you do run it, it takes a minute (or 5)
+
+## bayes_fit_fire <- brm_multiple(lrr | se(lrr_se) ~ trt_class,
+##                                data = fire_imputed,
+##                                chains = 4, cores = 4,
+##                                silent = 2, refresh = 0,
+##                                open_progress = FALSE)
+## saveRDS(bayes_fit_fire, "data/model_objects/bayes_fit_fire.rds")
+
+## bayes_fit_insect <- brm_multiple(lrr | se(lrr_se) ~ trt_class,
+##                                data = insect_imputed,
+##                                chains = 4, cores = 4,
+##                                silent = 2, refresh = 0,
+##                                open_progress = FALSE)
+## saveRDS(bayes_fit_insect, "data/model_objects/bayes_fit_insect.rds")
+
+
+## bayes_fit_drought <- brm_multiple(lrr | se(lrr_se) ~ trt_class,
+##                                data = drought_imputed,
+##                                chains = 4, cores = 4,
+##                                silent = 2, refresh = 0,
+##                                open_progress = FALSE)
+## saveRDS(bayes_fit_drought, "data/model_objects/bayes_fit_drought.rds")
 
 ##---------------------------------------------------------------
 ## 5. Results
 ##---------------------------------------------------------------
 
 ## first frequentist
-## no significant results
-pool <- summary(pool(freq_fit))
-pool[-1] <- round(pool[-1], digits = 3)
-pool
+pool_fire <- summary(pool(freq_fit_fire))
+pool_fire[-1] <- round(pool_fire[-1], digits = 3)
+pool_fire
 
-## then bayes
-## intestingly, the HMC fit shows clear positive effect of rx fire,
-## a clearly negative intercept (rx fire + thin), and a negative but unclear
-## effect of thinning alone.
-summary(bayes_fit)
-plot(bayes_fit)
+pool_insect <- summary(pool(freq_fit_insect))
+pool_insect[-1] <- round(pool_insect[-1], digits = 3)
+pool_insect
 
-conditional_effects(bayes_fit, points = TRUE)
+pool_drought <- summary(pool(freq_fit_drought))
+pool_drought[-1] <- round(pool_drought[-1], digits = 3)
+pool_drought
+
+
+## ## then bayes
+## summary(bayes_fit_fire)
+## plot(bayes_fit_fire)
+
+## summary(bayes_fit_insect)
+## plot(bayes_fit_insect)
+
+## summary(bayes_fit_drought)
+## plot(bayes_fit_drought)
+
