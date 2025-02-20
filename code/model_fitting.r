@@ -2,6 +2,8 @@
 ##---------------------------------------------------------------
 ## Model Fitting for Meta Analysis
 ##
+load("/Users/evangeline/Desktop/Github/fortreat_meta/data/model_objects/model_fitting.RData")
+save.image("~/Desktop/Github/fortreat_meta/data/model_objects/model_fitting.RData")
 ##---------------------------------------------------------------
 
 ##---------------------------------------------------------------
@@ -14,6 +16,7 @@ library("mice")
 library("brms")
 library("ggplot2")
 
+setwd('/Users/evangeline/Desktop/Github/fortreat_meta/')
 source("code/functions.r")
 
 ## read data
@@ -121,12 +124,25 @@ impute_data <- function(data, vars = c("lrr", "lrr_se", "trt_class")) {
 
 }
 
-
+# mortality/survivorship
 fire_imputed <- impute_data(data[data$disturbance_type == "fire" & data$carbon_vs_mortality == 2,])
 insect_imputed <- impute_data(data[data$disturbance_type == "insect" & data$carbon_vs_mortality == 2,])
 drought_imputed <- impute_data(data[data$disturbance_type == "drought" & data$carbon_vs_mortality == 2,])
 
-str(imputed_data) ## looks good
+# carbon
+fire_imputed_C <- impute_data(data[data$disturbance_type == "fire" & data$carbon_vs_mortality == 1,])
+insect_imputed_C <- impute_data(data[data$disturbance_type == "insect" & data$carbon_vs_mortality == 1,])
+drought_imputed_C <- impute_data(data[data$disturbance_type == "drought" & data$carbon_vs_mortality == 1,])
+
+str(fire_imputed) ## looks good
+complete(fire_imputed_C,2)
+
+saveRDS(fire_imputed, "data/model_objects/imputed_fire.rds")
+saveRDS(insect_imputed, "data/model_objects/imputed_insect.rds")
+saveRDS(drought_imputed, "data/model_objects/imputed_drought.rds")
+saveRDS(fire_imputed_C, "data/model_objects/imputed_fire_C.rds")
+saveRDS(insect_imputed_C, "data/model_objects/imputed_insect_C.rds")
+saveRDS(drought_imputed_C, "data/model_objects/imputed_drought_C.rds")
 
 ##---------------------------------------------------------------
 ## 4. Run models
@@ -135,6 +151,7 @@ str(imputed_data) ## looks good
 ## we are going to try two different methods, frequentist and Bayes, just for fun
 
 ## frequentist first, using 'metafor'
+# mortality/survivorship
 freq_fit_fire <- with(fire_imputed,
                       rma(yi = lrr,
                           sei = lrr_se,
@@ -152,6 +169,25 @@ freq_fit_drought <- with(drought_imputed,
                              sei = lrr_se,
                              mods = ~ trt_class))
 saveRDS(freq_fit_drought, "data/model_objects/freq_fit_drought.rds")
+
+# carbon
+freq_fit_fire_C <- with(fire_imputed_C,
+                      rma(yi = lrr,
+                          sei = lrr_se,
+                          mods = ~ trt_class))
+saveRDS(freq_fit_fire_C, "data/model_objects/freq_fit_fire_C.rds")
+
+freq_fit_insect_C <- with(insect_imputed_C,
+                        rma(yi = lrr,
+                            sei = lrr_se,
+                            mods = ~ trt_class))
+saveRDS(freq_fit_insect_C, "data/model_objects/freq_fit_insect_C.rds")
+
+freq_fit_drought_C <- with(drought_imputed_C,
+                         rma(yi = lrr,
+                             sei = lrr_se,
+                             mods = ~ trt_class))
+saveRDS(freq_fit_drought_C, "data/model_objects/freq_fit_drought_C.rds")
 
 ## now bayes
 ## Commenting this out for now -- lets keep it simple.
