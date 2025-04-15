@@ -47,29 +47,13 @@ colnames(full_data)[colnames(full_data) == "Carbon.vs.Mortality..1.Carbon..2.Mor
 
 ## need to remove some of these problem studies
 
+
+full_data[full_data$studyID == 284,]
+
 ## TODO
 ## Westling and Kerns 2021 (studyID = 284)
 ## reports mortality as dead trees per ha, no way to convert to % mortality
 full_data <- full_data[full_data$studyID != 284,]
-
-## TODO
-## Muzika et al 2000 (studyID = 201)
-## can't calculate SE in correct units, because transformation requires dividing by initial mortality
-## for now, impute SE
-full_data[full_data$studyID == 201, c("se_treatment", "se_control")] <- NA
-full_data[full_data$studyID == 201, "impute_sd"] <- 1
-
-## TODO
-## Young et al. 2020 (studyID = 250)
-## Need to re-extract using Figure 2a-2b. For now remove
-full_data <- full_data[full_data$studyID != 250,]
-
-
-## TODO
-## Zhang et al. (studyID = 193)
-## mean_control value = 1.3? Remove for now
-full_data <- full_data[!(full_data$studyID == 193 & full_data$mean_control > 1), ]
-
 
 ##---------------------------------------------------------------
 ## 2. mortality vs. survivorship
@@ -126,6 +110,58 @@ full_data_grouped$lrr_se <- lrr_se(full_data_grouped$mean_treatment,
 ## NAs remain NAs (missing values in og data)
 
 full_data_grouped[3:8,]
+
+
+full_data_grouped[full_data_grouped$lrr == 0,]
+
+
+##---------------------------------------------------------------
+## Clean up treatment classes
+##---------------------------------------------------------------
+
+cat_trt <- function(trt) {
+  if (((grepl("burn", tolower(trt)) | grepl("fire", tolower(trt))) & !grepl("unburn", tolower(trt))) &
+      (grepl("thin", tolower(trt)) | grepl("density", tolower(trt)) | grepl("umz", tolower(trt)))) return("both")
+  else if((grepl("burn", tolower(trt)) | grepl("fire", tolower(trt))) & !grepl("unburn", tolower(trt))) return("rx_fire")
+  else if(grepl("thin", tolower(trt)) | grepl("density", tolower(trt)) | grepl("umz", tolower(trt)))
+    return("thinning")
+  else return(NA)
+}
+
+## also lets just look at mortality for now, ignoring biomass/carbon data
+## so again we need to clean up the responseVariable column
+## TODO deal with all the various non-mortality variables
+
+full_data_grouped$burn <- "no"
+full_data_grouped$thin <- "no"
+for (i in 1:nrow(full_data_grouped)) {
+  print(i)
+  full_data_grouped[i,"trt_class"] <- cat_trt(full_data_grouped[i,"treatment"])
+  if (!is.na(full_data_grouped[i, "trt_class"])) {
+    if (full_data_grouped[i,"trt_class"] == "thinning") {
+      full_data_grouped[i,"thin"] <- "yes"
+    } else if (full_data_grouped[i,"trt_class"] == "rx_fire") {
+      full_data_grouped[i,"burn"] <- "yes"
+    } else if (full_data_grouped[i,"trt_class"] == "both") {
+      full_data_grouped[i,"thin"] <- "yes"
+      full_data_grouped[i,"burn"] <- "yes"
+    }
+  }
+}
+full_data_grouped$trt_class ## looks correct
+
+## remove na trt_class for now
+## TODO go back to studies and figure out the uncertain trt_classes
+## specifically, studies 72 and 419 have confusing treatment descriptions
+full_data_grouped <- full_data_grouped[!is.na(full_data_grouped$trt_class),]
+
+full_data_grouped$trt_class <- factor(full_data_grouped$trt_class, levels = c("rx_fire", "thinning", "both"))
+
+full_data_grouped$thin_bin <- 0
+full_data_grouped[full_data_grouped$thin == "yes", "thin_bin"] <- 1
+
+full_data_grouped$burn_bin <- 0
+full_data_grouped[full_data_grouped$burn == "yes", "burn_bin"] <- 1
 
 
 ##---------------------------------------------------------------
