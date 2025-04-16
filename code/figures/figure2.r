@@ -17,7 +17,7 @@ library("ggplot2")
 library("patchwork")
 library("cowplot")
 
-source("code/functions.r")
+source("code/00_functions.r")
 
 ## read data
 data <- read.csv("data/processed_data/data_cleaned.csv")
@@ -58,6 +58,8 @@ saveRDS(mort_fit, "data/model_objects/mort_fit_overall.rds")
 pool_mort <- summary(pool(mort_fit))
 pool_mort[-1] <- round(pool_mort[-1], digits = 3)
 pool_mort
+
+table_gen(pool_mort, "overall_trt_mort.csv")
 
 ## overall survivorship plot
 pdata <- data.frame(disturbance_type = factor(c("fire", "drought", "insect"), levels = c("fire", "drought", "insect")))
@@ -135,13 +137,19 @@ pool_fire_mort <- summary(pool(fire_mort_fit))
 pool_fire_mort[-1] <- round(pool_fire_mort[-1], digits = 3)
 pool_fire_mort
 
+table_gen(pool_fire_mort, "trtclass_fire_mort.csv")
+
 pool_drought_mort <- summary(pool(drought_mort_fit))
 pool_drought_mort[-1] <- round(pool_drought_mort[-1], digits = 3)
 pool_drought_mort
 
+table_gen(pool_drought_mort, "trtclass_drought_mort.csv")
+
 pool_insect_mort <- summary(pool(insect_mort_fit))
 pool_insect_mort[-1] <- round(pool_insect_mort[-1], digits = 3)
 pool_insect_mort
+
+table_gen(pool_insect_mort, "trtclass_insect_mort.csv")
 
 pdata <- data.frame(trt_class = factor(c("thinning", "both"), levels = c("thinning", "both")))
 pdata$disturbance_type = "fire"

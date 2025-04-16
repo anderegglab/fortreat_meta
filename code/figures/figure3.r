@@ -17,7 +17,7 @@ library("ggplot2")
 library("patchwork")
 library("cowplot")
 
-source("code/functions.r")
+source("code/00_functions.r")
 
 ## read data
 data <- read.csv("data/processed_data/data_cleaned.csv")
@@ -57,6 +57,8 @@ saveRDS(carbon_fit, "data/model_objects/carbon_fit_overall.rds")
 pool_carbon <- summary(pool(carbon_fit))
 pool_carbon[-1] <- round(pool_carbon[-1], digits = 3)
 pool_carbon
+
+table_gen(pool_carbon, "overall_trt_carbon.csv")
 
 pdata <- data.frame(disturbance_type = factor(c("fire", "drought", "insect"), levels = c("fire", "drought", "insect")))
 pdata$mean <- pool_carbon$estimate
@@ -132,13 +134,19 @@ pool_fire_carbon <- summary(pool(fire_carbon_fit))
 pool_fire_carbon[-1] <- round(pool_fire_carbon[-1], digits = 3)
 pool_fire_carbon
 
+table_gen(pool_fire_carbon, "trtclass_fire_carbon.csv")
+
 pool_drought_carbon <- summary(pool(drought_carbon_fit))
 pool_drought_carbon[-1] <- round(pool_drought_carbon[-1], digits = 3)
 pool_drought_carbon
 
+table_gen(pool_drought_carbon, "trtclass_drought_carbon.csv")
+
 pool_insect_carbon <- summary(pool(insect_carbon_fit))
 pool_insect_carbon[-1] <- round(pool_insect_carbon[-1], digits = 3)
 pool_insect_carbon
+
+table_gen(pool_insect_carbon, "trtclass_insect_carbon.csv")
 
 pdata <- data.frame(trt_class = factor(c("thinning", "rx_fire"), levels = c("thinning", "rx_fire")))
 pdata$disturbance_type = "fire"

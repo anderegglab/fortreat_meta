@@ -16,7 +16,7 @@ library("ggplot2")
 library("broom")
 library("patchwork")
 
-source("code/functions.r")
+source("code/00_functions.r")
 
 ## read data
 data <- read.csv("data/processed_data/data_cleaned.csv")
@@ -70,6 +70,8 @@ mort_fit <- with(mort_sev_imputed,
 pool_mort <- summary(pool(mort_fit))
 pool_mort[-1] <- round(pool_mort[-1], digits = 4)
 pool_mort
+
+table_gen(pool_mort, "baremoved_burn.csv")
 
 ## mortality
 pd <- data.frame(disturbance_typefire = c(rep(1, times = 20), rep(0, times = 40)),
@@ -182,6 +184,8 @@ carbon_fit <- with(carbon_sev_imputed,
 pool_carbon <- summary(pool(carbon_fit))
 pool_carbon[-1] <- round(pool_carbon[-1], digits = 4)
 pool_carbon
+
+table_gen(pool_carbon, "baremoved_carbon.csv")
 
 ## mortality
 pd <- data.frame(disturbance_typefire = c(rep(1, times = 20), rep(0, times = 40)),

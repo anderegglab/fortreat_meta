@@ -12,7 +12,7 @@ library("ggplot2")
 library("cowplot")
 library("patchwork")
 
-source("code/functions.r")
+source("code/00_functions.r")
 
 ## read data
 data <- read.csv("data/processed_data/data_cleaned.csv")
@@ -52,6 +52,8 @@ pool_carbon_tcon <- summary(pool(carbon_fit_tcon))
 pool_carbon_tcon[-1] <- round(pool_carbon_tcon[-1], digits = 3)
 pool_carbon_tcon
 
+table_gen(pool_carbon_tcon, "biome_tcon_carbon.csv")
+
 carbon_imputed_tbro <- impute_data(data[data$Olson_Biome == "Temperate Broadleaf and Mixed Forests" & data$carbon_vs_mortality == 1,], m = 100)
 
 carbon_fit_tbro <- with(carbon_imputed_tbro,
@@ -63,6 +65,8 @@ pool_carbon_tbro <- summary(pool(carbon_fit_tbro))
 pool_carbon_tbro[-1] <- round(pool_carbon_tbro[-1], digits = 3)
 pool_carbon_tbro
 
+table_gen(pool_carbon_tbro, "biome_tbro_carbon.csv")
+
 carbon_imputed_med <- impute_data(data[data$Olson_Biome == "Mediterranean Forests, Woodlands and Scrub" & data$carbon_vs_mortality == 1,], m = 100)
 
 carbon_fit_med <- with(carbon_imputed_med,
@@ -73,6 +77,7 @@ pool_carbon_med <- summary(pool(carbon_fit_med))
 pool_carbon_med[-1] <- round(pool_carbon_med[-1], digits = 3)
 pool_carbon_med
 
+table_gen(pool_carbon_med, "biome_med_carbon.csv")
 
 carbon_imputed_des <- impute_data(data[data$Olson_Biome == "Deserts and Xeric Shrublands" & data$carbon_vs_mortality == 1,], m = 100)
 
@@ -84,6 +89,7 @@ pool_carbon_des <- summary(pool(carbon_fit_des))
 pool_carbon_des[-1] <- round(pool_carbon_des[-1], digits = 3)
 pool_carbon_des
 
+table_gen(pool_carbon_des, "biome_des_carbon.csv")
 
 ##---------------------------------------------------------------
 ## 2. Barplot
