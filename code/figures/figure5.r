@@ -12,7 +12,7 @@ library("ggplot2")
 library("cowplot")
 library("patchwork")
 
-source("code/functions.r")
+source("code/00_functions.r")
 
 ## read data
 data <- read.csv("data/processed_data/data_cleaned.csv")
@@ -52,6 +52,8 @@ pool_mort_tcon <- summary(pool(mort_fit_tcon))
 pool_mort_tcon[-1] <- round(pool_mort_tcon[-1], digits = 3)
 pool_mort_tcon
 
+table_gen(pool_mort_tcon, "biome_tcon_mort.csv")
+
 data[data$Olson_Biome == "Temperate Broadleaf and Mixed Forests" & data$carbon_vs_mortality == 2,]
 mort_imputed_tbro <- impute_data(data[data$Olson_Biome == "Temperate Broadleaf and Mixed Forests" & data$carbon_vs_mortality == 2,], m = 100)
 
@@ -64,6 +66,8 @@ pool_mort_tbro <- summary(pool(mort_fit_tbro))
 pool_mort_tbro[-1] <- round(pool_mort_tbro[-1], digits = 3)
 pool_mort_tbro
 
+table_gen(pool_mort_tbro, "biome_tbro_mort.csv")
+
 mort_imputed_med <- impute_data(data[data$Olson_Biome == "Mediterranean Forests, Woodlands and Scrub" & data$carbon_vs_mortality == 2,], m = 100)
 
 mort_fit_med <- with(mort_imputed_med,
@@ -74,6 +78,8 @@ mort_fit_med <- with(mort_imputed_med,
 pool_mort_med <- summary(pool(mort_fit_med))
 pool_mort_med[-1] <- round(pool_mort_med[-1], digits = 3)
 pool_mort_med
+
+table_gen(pool_mort_med, "biome_med_mort.csv")
 
 
 ##---------------------------------------------------------------

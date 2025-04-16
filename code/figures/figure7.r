@@ -15,7 +15,7 @@ library("mice")
 library("brms")
 library("ggplot2")
 
-source("code/functions.r")
+source("code/00_functions.r")
 
 ## read data
 data <- read.csv("data/processed_data/data_cleaned.csv")
@@ -59,6 +59,8 @@ mort_fit <- with(mort_cwd_imputed,
 pool_mort <- summary(pool(mort_fit))
 pool_mort[-1] <- round(pool_mort[-1], digits = 4)
 pool_mort
+
+table_gen(pool_mort, "cwd_mort.csv")
 
 ## mortality
 pd <- data.frame(disturbance_typefire = c(rep(1, times = 20), rep(0, times = 40)),
@@ -186,6 +188,8 @@ pool_carbon <- summary(pool(carbon_fit))
 pool_carbon[-1] <- round(pool_carbon[-1], digits = 4)
 pool_carbon
 
+table_gen(pool_carbon, "cwd_carbon.csv")
+
 ## mortality
 pd <- data.frame(disturbance_typefire = c(rep(1, times = 20), rep(0, times = 40)),
            disturbance_typedrought = c(rep(0, times = 20), rep(1, times = 20), rep(0, times = 20)),
@@ -309,6 +313,8 @@ pool_mort <- summary(pool(mort_fit))
 pool_mort[-1] <- round(pool_mort[-1], digits = 4)
 pool_mort
 
+table_gen(pool_mort, "mat_mort.csv")
+
 ## mortality
 pd <- data.frame(disturbance_typefire = c(rep(1, times = 20), rep(0, times = 40)),
            disturbance_typedrought = c(rep(0, times = 20), rep(1, times = 20), rep(0, times = 20)),
@@ -417,6 +423,8 @@ carbon_fit <- with(carbon_sev_imputed,
 pool_carbon <- summary(pool(carbon_fit))
 pool_carbon[-1] <- round(pool_carbon[-1], digits = 4)
 pool_carbon
+
+table_gen(pool_carbon, "mat_carbon.csv")
 
 ## mortality
 pd <- data.frame(disturbance_typefire = c(rep(1, times = 20), rep(0, times = 40)),

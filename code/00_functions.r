@@ -91,3 +91,20 @@ lrr_se <- function(mean_1, mean_2, se_1, se_2) {
     sqrt((se_1^2 / mean_1^2) + (se_2^2  / mean_2^2))
   })
 }
+
+table_gen <- function(pool, outfile = "default.csv") {
+
+  summary <- data.frame(pool)
+  output <- data.frame(variable = as.character(summary$term),
+                       estimate = summary$estimate,
+                       se = summary$std.error,
+                       ci_low = summary$estimate - 1.97 * summary$std.error,
+                       ci_high = summary$estimate + 1.97 * summary$std.error,
+                       p_value = summary$p.value)
+  for (i in 1:nrow(output)) {
+    output[i, "variable"] <- gsub("disturbance_type", "", output[i, "variable"])
+    output[i, "variable"] <- gsub("_bin", "", output[i, "variable"])
+  }
+  write.csv(output, paste0("tables/", outfile))
+
+}

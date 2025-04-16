@@ -1,0 +1,3 @@
+"","variable","estimate","se","ci_low","ci_high","p_value"
+"1","intercept",1.925,0.343,1.24929,2.60071,0
+"2","thin:burn",-0.623,0.434,-1.47798,0.23198,0.161
