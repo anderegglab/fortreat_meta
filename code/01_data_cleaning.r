@@ -9,7 +9,7 @@
 
 ## libraries
 
-source("code/functions.r")
+source("code/00_functions.r")
 
 ## read data
 insect_data <- read.csv("data/raw_data/insect_analysis.csv")
@@ -150,10 +150,7 @@ for (i in 1:nrow(full_data_grouped)) {
 }
 full_data_grouped$trt_class ## looks correct
 
-## remove na trt_class for now
-## TODO go back to studies and figure out the uncertain trt_classes
-## specifically, studies 72 and 419 have confusing treatment descriptions
-full_data_grouped <- full_data_grouped[!is.na(full_data_grouped$trt_class),]
+## TODO go back to studies and figure out the uncertain trt_classes - Done (Cedric, 4/18/25)
 
 full_data_grouped$trt_class <- factor(full_data_grouped$trt_class, levels = c("rx_fire", "thinning", "both"))
 
