@@ -125,7 +125,7 @@ p1 <- ggplot() +
   scale_y_continuous(limits = c(-1, 5), expand = c(0,0)) +
   scale_color_manual(values = c("#e41a1c")) +
   scale_fill_manual(values = c("#e41a1c")) +
-  annotate("text", y = 4.5, x = -1.5, label = "***", size = 15) +
+  # annotate("text", y = 4.5, x = -1.5, label = "***", size = 15) +
   ylab("Log Response Ratio") +
   ggtitle("Fire") +
   theme_bw() +

@@ -14,6 +14,7 @@ library("metafor")
 library("mice")
 library("brms")
 library("ggplot2")
+library("patchwork")
 
 source("code/00_functions.r")
 
@@ -103,23 +104,6 @@ p <- ggplot() +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank())
 p
-
-p1 <- ggplot() +
-  geom_hline(yintercept = 0, color = "black", size = 2) +
-  geom_ribbon(data = pdata[pdata$disturbance_type == "fire",], aes(x = ba_removed, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
-  geom_line(data = pdata[pdata$disturbance_type == "fire",], aes(x = ba_removed, y = mean, color = disturbance_type), size = 3) +
-  geom_point(data = data[data$disturbance_type == "fire" & data$carbon_vs_mortality == 2,], aes(x = scale(ba_removed), y = lrr, color = disturbance_type), size = 5) +
-  scale_x_continuous(limits = c(-2, 2.5), expand = c(0,0)) +
-  scale_y_continuous(limits = c(-1, 5), expand = c(0,0)) +
-  scale_color_manual(values = c("#e41a1c")) +
-  scale_fill_manual(values = c("#e41a1c")) +
-  annotate("text", y = 4.5, x = -1.5, label = "***", size = 15) +
-  ylab("Log Response Ratio") +
-  ggtitle("Fire") +
-  theme_bw() +
-  theme(legend.position = "none", axis.title.x = element_blank(), axis.title.y = element_text(size = 16),
-        plot.title = element_text(face = "bold", size = 18))
-p1
 
 
 p1 <- ggplot() +
