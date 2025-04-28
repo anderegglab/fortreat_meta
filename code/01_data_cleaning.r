@@ -50,9 +50,9 @@ colnames(full_data)[colnames(full_data) == "Carbon.vs.Mortality..1.Carbon..2.Mor
 
 full_data[full_data$studyID == 284,]
 
-## TODO
+
 ## Westling and Kerns 2021 (studyID = 284)
-## reports mortality as dead trees per ha, no way to convert to % mortality
+## reports mortality as dead trees per ha, no way to convert to % mortality - decided to remove
 full_data <- full_data[full_data$studyID != 284,]
 
 ##---------------------------------------------------------------
@@ -67,7 +67,7 @@ hist(full_data[full_data$carbon_vs_mortality == 2, "mean_treatment"])
 
 
 ## remove NAs
-full_data <- full_data[!is.na(full_data$mean_treatment),]
+full_data <- full_data[!is.na(full_data$mean_treatment),] # Not necessary now, no NA's anyways.
 
 ## 100% mortality
 nrow(full_data[full_data$carbon_vs_mortality == 2 & full_data$mean_control == 1,])
@@ -92,11 +92,19 @@ full_data_grouped <- group_data(full_data)
 ## 3. Calculate effect sizes and standard errors
 ##---------------------------------------------------------------
 ## for now we will add a small number when survivorship is 0:
-full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_treatment == 0, c("mean_treatment", "sd_treatment", "se_treatment")] <-
-  full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_treatment == 0, c("mean_treatment", "sd_treatment", "se_treatment")] + 0.01
+## where we do, we'll always impute the SE though.
+full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_treatment == 0, c("sd_treatment", "se_treatment")] <- NA
 
-full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_control == 0, c("mean_control", "sd_control", "se_control")] <-
-  full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_control == 0, c("mean_control", "sd_control", "se_control")] + 0.01
+full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_treatment == 0, c("mean_treatment")] <-
+  full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_treatment == 0, c("mean_treatment")] + 0.01
+
+full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_control == 0, c("sd_control", "se_control")] <- NA
+
+full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_control == 0, c("mean_control")] <-
+  full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_control == 0, c("mean_control")] + 0.01
+
+full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_treatment == 0.01, c("mean_treatment", "sd_treatment", "se_treatment")] # looks good
+full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_control == 0.01, c("mean_control", "sd_control", "se_control")] # looks good
 
 ## calculate log response ratio
 full_data_grouped$lrr <- lrr(full_data_grouped$mean_treatment,
@@ -110,8 +118,6 @@ full_data_grouped$lrr_se <- lrr_se(full_data_grouped$mean_treatment,
 ## NAs remain NAs (missing values in og data)
 
 full_data_grouped[3:8,]
-
-
 full_data_grouped[full_data_grouped$lrr == 0,]
 
 
