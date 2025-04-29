@@ -6,6 +6,7 @@
 
 ## I know this file seems weird, but its just here so that we can quickly regenerate tables and figures
 ## after making a change to the underlying data.
+source("code/01_data_cleaning.r")
 
 ## maps
 source("code/figures/figure1.r")

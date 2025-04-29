@@ -71,7 +71,7 @@ pool_mort <- summary(pool(mort_fit))
 pool_mort[-1] <- round(pool_mort[-1], digits = 4)
 pool_mort
 
-table_gen(pool_mort, "baremoved_burn.csv")
+table_gen(pool_mort, "baremoved_mort.csv")
 
 ## mortality
 pd <- data.frame(disturbance_typefire = c(rep(1, times = 20), rep(0, times = 40)),
@@ -171,6 +171,7 @@ ABC
 mort_plot
 
 ggsave("figures/figure4A.png", width = 20, height = 8)
+ggsave("figures/illustrator/figure4A.pdf", width = 20, height = 8)
 
 
 
@@ -270,4 +271,4 @@ ABC
 carbon_plot
 
 ggsave("figures/figure4B.png", width = 20, height = 8)
-
+ggsave("figures/illustrator/figure4B.pdf", width = 20, height = 8)

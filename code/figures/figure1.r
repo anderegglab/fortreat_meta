@@ -1,170 +1,45 @@
-##---------------------------------------------------------------
-## Figure 1
-##
-##---------------------------------------------------------------
+##########
+# Create a world and western US map as Figure 1. Add them toghether later in Illustrator
+# Cedric Zahnd
+##########
+# Load packages
+library(maps)
 
-## load packages
-library("metafor")
-library("ggplot2")
-library("maps")
-library("sf")
-library("MetBrewer")
-library("patchwork")
-
-## read in data
+# Load data
 data <- read.csv("data/processed_data/data_cleaned.csv")
 
-sf_data <- st_as_sf(data, coords = c("longitude.coordinate", "latitude.coordinate"), crs = 4326)
-sf_data$disturbance_type <- factor(data$disturbance_type, levels = c("fire", "drought", "insect"))
+# Subset to keep it tidy
+data <- data[,c("studyID", "trt_class", "disturbance_type", "carbon_vs_mortality", "latitude.coordinate", "longitude.coordinate")]
 
-world <- st_read("../../Princeton/precipitation_intensification/data/World_Countries_Generalized.shp")
-world <- st_transform(world, crs = 4326)
+clfire <- "#e41a1c" ; cldrou <- "#377eb8" ; clinse <- "#4daf4a"
+alph <- 50
+clfire2 <- rgb(228,26,28,alph,maxColorValue = 255) # fire
+cldrou2 <- rgb(55,126,184,alph,maxColorValue = 255) # drought
+clinse2 <- rgb(77,175,74,alph,maxColorValue = 255) # insect
 
-p1 <- ggplot(world) +
-  geom_sf(fill = "gray", color = "white") +
-  geom_sf(data = sf_data, aes(color = disturbance_type), size = 5, alpha = 0.9) +
-  theme_bw() +
-  scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
-  labs(color = "Disturbance") +
-  #scale_color_gradient2(low = "#f7fbff", mid = "#6baed6", high = "#084594", midpoint = 800) +
-  scale_x_continuous(expand = c(0,0)) +
-  scale_y_continuous(expand = c(0,0)) +
-  ggtitle("Disturbance") +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        plot.title = element_text(size = 25, face = "bold"),
-        axis.title = element_text(size = 20),
-        legend.key.size = unit(1.1, "cm"),
-        legend.title = element_text(face = "bold", size = 14),
-        legend.text = element_text(face = "italic", size = 12),
-        legend.position = "inside",
-        legend.position.inside = c(0.05, 0.5))
-p1
-ggsave("figures/figure1A.png", width = 14, height = 10)
+data$cl1 <- clfire ; data$cl2 <- clfire2
+data$cl1[data$disturbance_type == "drought"] <- cldrou ; data$cl2[data$disturbance_type == "drought"] <- cldrou2  
+data$cl1[data$disturbance_type == "insect"] <- clinse ; data$cl2[data$disturbance_type == "insect"] <- clinse2
 
-p2 <- ggplot(world) +
-  geom_sf(fill = "gray", color = "white") +
-  geom_sf(data = sf_data, aes(color = Olson_Biome), size = 5, alpha = 0.9) +
-  theme_bw() +
-  #scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
-  labs(color = "Olson Biome") +
-  scale_color_manual(values=met.brewer("Lakota", 4)) +
-  scale_x_continuous(expand = c(0,0)) +
-  scale_y_continuous(expand = c(0,0)) +
-  ggtitle("Biome") +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        plot.title = element_text(size = 25, face = "bold"),
-        axis.title = element_text(size = 20),
-        legend.key.size = unit(1.1, "cm"),
-        legend.title = element_text(face = "bold", size = 14),
-        legend.text = element_text(face = "italic", size = 12),
-        legend.position = "inside",
-        legend.position.inside = c(0.15, 0.3))
-p2
-ggsave("figures/figure1B.png", width = 14, height = 10)
+data$pchs <- 21
+data$pchs[data$trt_class == "rx_fire"] <- 24
+data$pchs[data$trt_class == "both"] <- 23
+
+#
+cx1 <- 1.4
+
+pdf("figures/worldmap.pdf", width = 9.2, height = 4)
+map("world", fill = T, col = "lightgrey", border = "white", ylim = c(-60,90), xlim = c(-175,190), myborder = 0, mar = c(0.25,0.1,0.5,0.1),lforce="e")
+with(data, points(longitude.coordinate, latitude.coordinate, pch = pchs, col = cl1, bg = cl2, cex = cx1))
+legend("bottom", inset = 0.02, bg = "white", col = c("black", "black", clfire, "black", cldrou, "black", clinse, "black", 3), pch  = c(26,26,16,16,16,17,16,18), legend = c("Disturbance:", "Treatment:", "Fire", "Thinning", "Drought", "Rx Fire", "Insect", "Both"), ncol = 4)
+box()
+dev.off()
+
+pdf("figures/usamap.pdf", width = 3, height = 3)
+map("state", fill = T, col = "lightgrey", border = "white", xlim = c(-130,-100), ylim = c(25,52), myborder = 0, mar = c(0.25,0.1,0.5,0.1),lforce="e")
+with(data, points(longitude.coordinate, latitude.coordinate, pch = pchs, col = cl1, bg = cl2, cex = cx1-0.2))
+legend("top", legend = "Western USA", bty = "n")
+box()
+dev.off()
 
 
-p3 <- ggplot(world) +
-  geom_sf(fill = "gray", color = "white") +
-  geom_sf(data = sf_data, aes(color = trt_class), size = 5, alpha = 0.9) +
-  theme_bw() +
-  #scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
-  scale_color_manual(values=met.brewer("Klimt", 3)) +
-  labs(color = "Olson Biome") +
-  #scale_color_gradient2(low = "#f7fbff", mid = "#6baed6", high = "#084594", midpoint = 800) +
-  scale_x_continuous(expand = c(0,0)) +
-  scale_y_continuous(expand = c(0,0)) +
-  ggtitle("Treatment") +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        plot.title = element_text(size = 25, face = "bold"),
-        axis.title = element_text(size = 20),
-        legend.key.size = unit(1.1, "cm"),
-        legend.title = element_text(face = "bold", size = 14),
-        legend.text = element_text(face = "italic", size = 12),
-        legend.position = "inside",
-        legend.position.inside = c(0.15, 0.3))
-p3
-ggsave("figures/figure1C.png", width = 14, height = 10)
-
-
-library(usmap)
-
-states <- us_map()
-states <- st_transform(states, crs = 4326)
-states <- states[states$abbr != "AK" & states$abbr != "HI",]
-
-
-p4 <- ggplot(states) +
-  geom_sf(fill = "gray", color = "white") +
-  geom_sf(data = sf_data, aes(color = disturbance_type), size = 5, alpha = 0.9) +
-  theme_bw() +
-  scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
-  labs(color = "Disturbance") +
-  xlim(c(-130,-60)) +
-  ylim(c(25,50)) +
-  #scale_color_gradient2(low = "#f7fbff", mid = "#6baed6", high = "#084594", midpoint = 800) +
-  #scale_x_continuous(expand = c(0,0)) +
-  #scale_y_continuous(expand = c(0,0)) +
-  ggtitle("Disturbance (US)") +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        plot.title = element_text(size = 25, face = "bold"),
-        axis.title = element_text(size = 20),
-        legend.key.size = unit(1.1, "cm"),
-        legend.title = element_text(face = "bold", size = 14),
-        legend.text = element_text(face = "italic", size = 12),
-        legend.position = "inside",
-        legend.position.inside = c(0.05, 0.5))
-p4
-ggsave("figures/figure1D.png", width = 14, height = 10)
-
-p5 <- ggplot(states) +
-  geom_sf(fill = "gray", color = "white") +
-  geom_sf(data = sf_data, aes(color = Olson_Biome), size = 5, alpha = 0.9) +
-  theme_bw() +
-  xlim(c(-130,-60)) +
-  ylim(c(25,50)) +
-  #scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
-  labs(color = "Olson Biome") +
-  scale_color_manual(values=met.brewer("Lakota", 4)) +
-  #scale_x_continuous(expand = c(0,0)) +
-  #scale_y_continuous(expand = c(0,0)) +
-  ggtitle("Biome (US)") +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        plot.title = element_text(size = 25, face = "bold"),
-        axis.title = element_text(size = 20),
-        legend.key.size = unit(0.9, "cm"),
-        legend.title = element_text(face = "bold", size = 14),
-        legend.text = element_text(face = "italic", size = 12),
-        legend.position = "inside",
-        legend.position.inside = c(0.15, 0.17))
-p5
-ggsave("figures/figure1E.png", width = 14, height = 10)
-
-p6 <- ggplot(states) +
-  geom_sf(fill = "gray", color = "white") +
-  geom_sf(data = sf_data, aes(color = trt_class), size = 5, alpha = 0.9) +
-  theme_bw() +
-  xlim(c(-130,-60)) +
-  ylim(c(25,50)) +
-  #scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
-  scale_color_manual(values=met.brewer("Klimt", 3)) +
-  labs(color = "Treatment") +
-  #scale_color_gradient2(low = "#f7fbff", mid = "#6baed6", high = "#084594", midpoint = 800) +
-  #scale_x_continuous(expand = c(0,0)) +
-  #scale_y_continuous(expand = c(0,0)) +
-  ggtitle("Treatment (US)") +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        plot.title = element_text(size = 25, face = "bold"),
-        axis.title = element_text(size = 20),
-        legend.key.size = unit(1.1, "cm"),
-        legend.title = element_text(face = "bold", size = 14),
-        legend.text = element_text(face = "italic", size = 12),
-        legend.position = "inside",
-        legend.position.inside = c(0.05, 0.2))
-p6
-ggsave("figures/figure1F.png", width = 14, height = 10)

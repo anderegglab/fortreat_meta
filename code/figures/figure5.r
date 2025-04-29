@@ -92,12 +92,12 @@ A <- ggplot(data[data$carbon_vs_mortality == 2, ]) +
   geom_bar(aes(x = Olson_Biome, fill = disturbance_type)) +
   labs(x = "Biome", y = "Count", fill = "Disturbance") +
   annotate("text", x = "Deserts and Xeric Shrublands", y = 10, label = "Deserts and \n Xeric Shrublands", size = 4) +
-  annotate("text", x = "Mediterranean Forests, Woodlands and Scrub", y = 20, label = "Mediterranean Forests, \n Woodlands and Scrub", size = 4) +
+  annotate("text", x = "Mediterranean Forests, Woodlands and Scrub", y = 13, label = "Mediterranean Forests, \n Woodlands and Scrub", size = 4) +
   annotate("text", x = "Temperate Broadleaf and Mixed Forests", y = 17, label = "Temperate Broadleaf \n and Mixed Forests", size = 4) +
-  annotate("text", x = "Temperate Conifer Forests", y = 87, label = "Temperate Conifer \n Forests", size = 4) +
+  annotate("text", x = "Temperate Conifer Forests", y = 105, label = "Temperate Conifer \n Forests", size = 4) +
   ggtitle("Biome Effects: Survivorship") +
   scale_fill_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
-  scale_y_continuous(expand = c(0,0), limits = c(0, 100)) +
+  scale_y_continuous(expand = c(0,0), limits = c(0, 110)) +
   theme_bw() +
   theme(legend.position = "inside", legend.position.inside = c(0.1, 0.9), axis.text.x = element_blank(),
         plot.title = element_text(face = "bold", size = 18))
@@ -168,7 +168,7 @@ C <- ggplot() +
   geom_jitter(data = data[data$Olson_Biome == "Temperate Broadleaf and Mixed Forests" & data$carbon_vs_mortality == 2,], aes(x = lrr, y = disturbance_type, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
   geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
-  annotate("text", x = 4.9, y = "insect", label = "***", size = 14) +
+  #annotate("text", x = 4.9, y = "insect", label = "***", size = 14) +
   annotate("text", x = 4.9, y = "drought", label = "***", size = 14) +
   scale_color_manual(values = c("#377eb8", "#4daf4a")) +
   ggtitle("Temperate Broadleaf and Mixed Forests") +
@@ -220,4 +220,4 @@ AC
 AE")
 
 ggsave("figures/figure5.png", width = 17, height = 10)
-
+ggsave("figures/illustrator/figure5.pdf", width = 17, height = 10)

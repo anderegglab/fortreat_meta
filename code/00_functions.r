@@ -53,7 +53,7 @@ group_data <- function(data, remove_zeros = FALSE, add_constant = FALSE) {
       for (grp in unique(sdata$grouping_flags)) {
 
         gdata <- sdata[sdata$grouping_flags == grp,] ## pull data with same group
-        ndata <- sdata[1,]
+        ndata <- gdata[1,]
 
         ndata[,c("mean_treatment", "n_treatment", "sd_treatment", "se_treatment")] <-
          c(overall_mean(gdata$mean_treatment, gdata$n_treatment),
