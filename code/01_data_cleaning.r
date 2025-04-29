@@ -45,12 +45,6 @@ colnames(full_data)[colnames(full_data) == "Carbon.vs.Mortality..1.Carbon..2.Mor
 ## 1. Flag studies that we still need to sort
 ##---------------------------------------------------------------
 
-## need to remove some of these problem studies
-
-
-full_data[full_data$studyID == 284,]
-
-
 ## Westling and Kerns 2021 (studyID = 284)
 ## reports mortality as dead trees per ha, no way to convert to % mortality - decided to remove
 full_data <- full_data[full_data$studyID != 284,]
@@ -166,9 +160,19 @@ full_data_grouped[full_data_grouped$thin == "yes", "thin_bin"] <- 1
 full_data_grouped$burn_bin <- 0
 full_data_grouped[full_data_grouped$burn == "yes", "burn_bin"] <- 1
 
+## missing data summaries
+length(unique(full_data_grouped[is.na(full_data_grouped$lrr_se),"studyID"]))
+length(unique(full_data_grouped$studyID))
+
+length(unique(full_data_grouped[is.na(full_data_grouped$ba_removed),"studyID"]))
+length(unique(full_data_grouped$studyID))
+
+sum(is.na(full_data_grouped$lrr_se))
+sum(is.na(full_data_grouped$lrr_se)) / nrow(full_data_grouped)
+sum(is.na(full_data_grouped$ba_removed))
+sum(is.na(full_data_grouped$ba_removed)) / nrow(full_data_grouped)
 
 ##---------------------------------------------------------------
 ## 4. save cleaned data file
 ##---------------------------------------------------------------
-
 write.csv(full_data_grouped, "data/processed_data/data_cleaned.csv")

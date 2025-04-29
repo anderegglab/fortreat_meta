@@ -224,3 +224,4 @@ AC
 AE")
 
 ggsave("figures/figure3.png", width = 14, height = 12)
+ggsave("figures/illustrator/figure3.pdf", width = 14, height = 12)

@@ -22,6 +22,7 @@ source("code/00_functions.r")
 ## read data
 data <- read.csv("data/processed_data/data_cleaned.csv")
 
+
 ##---------------------------------------------------------------
 ## 1 Overall
 ##---------------------------------------------------------------
@@ -225,3 +226,4 @@ AC
 AE")
 
 ggsave("figures/figure2.png", width = 14, height = 12)
+ggsave("figures/illustrator/figure2.pdf", width = 14, height = 12)
