@@ -47,8 +47,35 @@ group_data <- function(data, remove_zeros = FALSE, add_constant = FALSE) {
   for (id in unique(data$studyID)) {
 
     sdata <- data[data$studyID == id,] ## pull all data from ID
-
-    if (!is.na(sdata[1,"grouping_flags"])) {
+    
+    if(id == 169){
+      
+      sdata2 <- sdata[is.na(sdata$grouping_flags),]
+      sdata <- sdata[!is.na(sdata$grouping_flags),]
+      
+      for (grp in unique(sdata$grouping_flags)) {
+        
+        gdata <- sdata[sdata$grouping_flags == grp,] ## pull data with same group
+        ndata <- gdata[1,]
+        
+        ndata[,c("mean_treatment", "n_treatment", "sd_treatment", "se_treatment")] <-
+          c(overall_mean(gdata$mean_treatment, gdata$n_treatment),
+            sum(gdata$n_treatment),
+            overall_sd(gdata$mean_treatment, gdata$n_treatment, gdata$sd_treatment),
+            overall_se(gdata$mean_treatment, gdata$n_treatment, gdata$se_treatment))
+        
+        ndata[,c("mean_control", "n_control", "sd_control", "se_control")] <-
+          c(overall_mean(gdata$mean_control, gdata$n_control),
+            sum(gdata$n_control),
+            overall_sd(gdata$mean_control, gdata$n_control, gdata$sd_control),
+            overall_se(gdata$mean_control, gdata$n_control, gdata$se_control))
+        
+        data_grouped <- rbind(data_grouped, ndata)
+      }
+      
+      data_grouped <- rbind(data_grouped, sdata2)
+      
+    }else if (!is.na(sdata[1,"grouping_flags"])) {
 
       for (grp in unique(sdata$grouping_flags)) {
 
