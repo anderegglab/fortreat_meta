@@ -121,21 +121,17 @@ full_data_grouped[full_data_grouped$lrr == 0,]
 
 cat_trt <- function(trt) {
   if (((grepl("burn", tolower(trt)) | grepl("fire", tolower(trt))) & !grepl("unburn", tolower(trt))) &
-      (grepl("thin", tolower(trt)) | grepl("density", tolower(trt)) | grepl("umz", tolower(trt)))) return("both")
+      (grepl("thin", tolower(trt)) | grepl("density", tolower(trt)) | grepl("cut", tolower(trt)) | grepl("umz", tolower(trt)))) return("both")
   else if((grepl("burn", tolower(trt)) | grepl("fire", tolower(trt))) & !grepl("unburn", tolower(trt))) return("rx_fire")
-  else if(grepl("thin", tolower(trt)) | grepl("density", tolower(trt)) | grepl("umz", tolower(trt)))
+  else if(grepl("thin", tolower(trt)) | grepl("density", tolower(trt)) | grepl("cut", tolower(trt)) | grepl("umz", tolower(trt)))
     return("thinning")
   else return(NA)
 }
 
-## also lets just look at mortality for now, ignoring biomass/carbon data
-## so again we need to clean up the responseVariable column
-## TODO deal with all the various non-mortality variables
-
 full_data_grouped$burn <- "no"
 full_data_grouped$thin <- "no"
+
 for (i in 1:nrow(full_data_grouped)) {
-  print(i)
   full_data_grouped[i,"trt_class"] <- cat_trt(full_data_grouped[i,"treatment"])
   if (!is.na(full_data_grouped[i, "trt_class"])) {
     if (full_data_grouped[i,"trt_class"] == "thinning") {
@@ -148,9 +144,6 @@ for (i in 1:nrow(full_data_grouped)) {
     }
   }
 }
-full_data_grouped$trt_class ## looks correct
-
-## TODO go back to studies and figure out the uncertain trt_classes - Done (Cedric, 4/18/25)
 
 full_data_grouped$trt_class <- factor(full_data_grouped$trt_class, levels = c("rx_fire", "thinning", "both"))
 

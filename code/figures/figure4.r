@@ -170,8 +170,8 @@ ABC
 ")
 mort_plot
 
-ggsave("figures/figure4A.png", width = 20, height = 8)
-ggsave("figures/illustrator/figure4A.pdf", width = 20, height = 8)
+ggsave("figures/figure4A.png", width = 10, height = 4)
+ggsave("figures/illustrator/figure4A.pdf", width = 10, height = 4)
 
 
 
@@ -270,5 +270,5 @@ ABC
 ")
 carbon_plot
 
-ggsave("figures/figure4B.png", width = 20, height = 8)
-ggsave("figures/illustrator/figure4B.pdf", width = 20, height = 8)
+ggsave("figures/figure4B.png", width = 10, height = 4)
+ggsave("figures/illustrator/figure4B.pdf", width = 10, height = 4)

@@ -69,10 +69,10 @@ pdata$upper <- pdata$mean + 1.97*pdata$se
 A <- ggplot() +
   geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.8) +
   geom_jitter(data = data[data$carbon_vs_mortality == 1,], aes(x = lrr, y = disturbance_type, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
-  geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 12) +
+  geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
-  annotate("text", y = "drought", x = 1.5, label = "***", size = 15) +
+  annotate("text", y = "drought", x = 1.5, label = "*", size = 15) +
   xlab("Log Response Ratio") +
   ggtitle("Treatment Effects: Carbon") +
   theme_bw() +
@@ -115,7 +115,7 @@ drought_carbon_imputed <- impute_data(data[data$disturbance_type == "drought" & 
 fire_carbon_fit <- with(fire_carbon_imputed,
                       rma(yi = lrr,
                           sei = lrr_se,
-                          mods = ~ 0 + thin_bin + burn_bin))
+                          mods = ~ 0 + thin_bin * burn_bin))
 saveRDS(fire_carbon_fit, "data/model_objects/fire_carbon_fit.rds")
 
 drought_carbon_fit <- with(drought_carbon_imputed,
@@ -148,10 +148,11 @@ pool_insect_carbon
 
 table_gen(pool_insect_carbon, "trtclass_insect_carbon.csv")
 
-pdata <- data.frame(trt_class = factor(c("thinning", "rx_fire"), levels = c("thinning", "rx_fire")))
+pdata <- data.frame(trt_class = factor(c("thinning", "rx_fire", "both"), levels = c("thinning", "rx_fire", "both")))
 pdata$disturbance_type = "fire"
 pdata$mean[1] <- pool_fire_carbon$estimate[1]
 pdata$mean[2] <- pool_fire_carbon$estimate[2]
+pdata$mean[3] <- pool_fire_carbon$estimate[1] + pool_fire_carbon$estimate[2] + pool_fire_carbon$estimate[3]
 pdata$se <- pool_fire_carbon$std.error
 pdata$lower <- pdata$mean - 1.97*pdata$se
 pdata$upper <- pdata$mean + 1.97*pdata$se
@@ -159,9 +160,9 @@ pdata$upper <- pdata$mean + 1.97*pdata$se
 B <- ggplot() +
   geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.8) +
   geom_jitter(data = data[data$disturbance_type == "fire" & data$carbon_vs_mortality == 1,], aes(x = lrr, y = trt_class, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
-  geom_point(data = pdata, aes(x = mean, y = trt_class, color = disturbance_type), size = 8) +
+  geom_point(data = pdata, aes(x = mean, y = trt_class, color = disturbance_type), size = 6) +
   geom_linerange(data = pdata, aes(y = trt_class, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
-  annotate("text", y = "thinning", x = 4.6, label = "***", size = 15) +
+  annotate("text", y = "thinning", x = 4.6, label = "*", size = 15) +
   scale_color_manual(values = c("#e41a1c")) +
   xlab("Log Response Ratio") +
   xlim(-1.5, 5) +
@@ -183,10 +184,10 @@ pdata$upper <- pdata$mean + 1.97*pdata$se
 C <- ggplot() +
   geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.8) +
   geom_jitter(data = data[data$disturbance_type == "drought" & data$carbon_vs_mortality == 1,], aes(x = lrr, y = trt_class, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
-  geom_point(data = pdata, aes(x = mean, y = trt_class, color = disturbance_type), size = 8) +
+  geom_point(data = pdata, aes(x = mean, y = trt_class, color = disturbance_type), size = 6) +
   geom_linerange(data = pdata, aes(y = trt_class, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
-  annotate("text", y = "both", x = 4.6, label = "***", size = 15) +
-  annotate("text", y = "thinning", x = 4.6, label = "***", size = 15) +
+  annotate("text", y = "both", x = 4.6, label = "*", size = 15) +
+  annotate("text", y = "thinning", x = 4.6, label = "*", size = 15) +
   scale_color_manual(values = c("#377eb8")) +
   xlim(-1.5, 5) +
   theme_bw() +
@@ -206,7 +207,7 @@ pdata$upper <- pdata$mean + 1.97*pdata$se
 D <- ggplot() +
   geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.8) +
   geom_jitter(data = data[data$disturbance_type == "insect" & data$carbon_vs_mortality == 1,], aes(x = lrr, y = trt_class, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
-  geom_point(data = pdata, aes(x = mean, y = trt_class, color = disturbance_type), size = 8) +
+  geom_point(data = pdata, aes(x = mean, y = trt_class, color = disturbance_type), size = 6) +
   geom_linerange(data = pdata, aes(y = trt_class, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   scale_color_manual(values = c("#4daf4a")) +
   xlim(-1.5, 5) +
@@ -223,5 +224,5 @@ AB
 AC
 AE")
 
-ggsave("figures/figure3.png", width = 14, height = 12)
-ggsave("figures/illustrator/figure3.pdf", width = 14, height = 12)
+ggsave("figures/figure3.png", width = 8, height = 8)
+ggsave("figures/illustrator/figure3.pdf", width = 8, height = 8)
