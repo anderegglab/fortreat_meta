@@ -102,7 +102,7 @@ A <- ggplot(data[data$carbon_vs_mortality == 1, ]) +
   geom_bar(aes(x = Olson_Biome, fill = disturbance_type)) +
   labs(x = "Biome", y = "Count", fill = "Disturbance") +
   annotate("text", x = "Deserts and Xeric Shrublands", y = 20, label = "Deserts and \n Xeric Shrublands", size = 5) +
-  annotate("text", x = "Mediterranean Forests, Woodlands and Scrub", y = 32, label = "Mediterranean Forests, \n Woodlands and Scrub", size = 5) +
+  annotate("text", x = "Mediterranean Forests, Woodlands and Scrub", y = 17, label = "Mediterranean Forests, \n Woodlands and Scrub", size = 5) +
   annotate("text", x = "Temperate Broadleaf and Mixed Forests", y = 12, label = "Temperate Broadleaf \n and Mixed Forests", size = 5) +
   annotate("text", x = "Temperate Conifer Forests", y = 42, label = "Temperate Conifer \n Forests", size = 5) +
   ggtitle("Biome Effects: Carbon") +
@@ -140,8 +140,8 @@ B <- ggplot() +
   geom_jitter(data = data[data$Olson_Biome == "Temperate Conifer Forests" & data$carbon_vs_mortality == 1,], aes(x = lrr, y = disturbance_type, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
   geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
-  annotate("text", x = 4.9, y = "fire", label = "***", size = 14) +
-  annotate("text", x = 4.9, y = "drought", label = "***", size = 14) +
+  #annotate("text", x = 4.9, y = "fire", label = "***", size = 14) +
+  annotate("text", x = 4.9, y = "drought", label = "*", size = 14) +
   scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
   ggtitle("Temperate Conifer Forests") +
   xlim(-1.2, 5) +
@@ -179,7 +179,7 @@ C <- ggplot() +
   geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
-  ggtitle("Temperate Conifer Forests") +
+  ggtitle("Temperate Broadleaf and Mixed Forests") +
   xlim(-1.2, 5) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank())
@@ -211,7 +211,7 @@ D <- ggplot() +
   geom_jitter(data = data[data$Olson_Biome == "Mediterranean Forests, Woodlands and Scrub" & data$carbon_vs_mortality == 1,], aes(x = lrr, y = disturbance_type, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
   geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
-  annotate("text", x = 4.9, y = "drought", label = "***", size = 14) +
+  annotate("text", x = 4.9, y = "drought", label = "*", size = 14) +
   scale_color_manual(values = c("#377eb8")) +
   xlim(-1.2, 5) +
   ggtitle("Mediterranean Forests, Woodlands and Scrub") +
@@ -247,8 +247,8 @@ E <- ggplot() +
   geom_jitter(data = data[data$Olson_Biome == "Deserts and Xeric Shrublands" & data$carbon_vs_mortality == 1,], aes(x = lrr, y = disturbance_type, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
   geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
-  annotate("text", x = 4.9, y = "fire", label = "***", size = 14) +
-  annotate("text", x = 4.9, y = "insect", label = "***", size = 14) +
+  annotate("text", x = 4.9, y = "fire", label = "*", size = 14) +
+  annotate("text", x = 4.9, y = "insect", label = "*", size = 14) +
   scale_color_manual(values = c("#e41a1c", "#4daf4a")) +
   xlim(-1.2, 5) +
   ggtitle("Deserts and Xeric Shrublands") +
@@ -264,5 +264,5 @@ AC
 AE
 AF")
 
-ggsave("figures/figure6.png", width = 17, height = 10)
-ggsave("figures/illustrator/figure6.pdf", width = 17, height = 10)
+ggsave("figures/figure6.png", width = 13, height = 10)
+ggsave("figures/illustrator/figure6.pdf", width = 13, height = 10)

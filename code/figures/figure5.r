@@ -134,7 +134,7 @@ B <- ggplot() +
   geom_jitter(data = data[data$Olson_Biome == "Temperate Conifer Forests" & data$carbon_vs_mortality == 2,], aes(x = lrr, y = disturbance_type, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
   geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
-  annotate("text", x = 4.9, y = "fire", label = "***", size = 14) +
+  annotate("text", x = 4.9, y = "fire", label = "*", size = 14) +
   scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
   ggtitle("Temperate Conifer Forests") +
   xlim(-1.2, 5) +
@@ -169,7 +169,7 @@ C <- ggplot() +
   geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   #annotate("text", x = 4.9, y = "insect", label = "***", size = 14) +
-  annotate("text", x = 4.9, y = "drought", label = "***", size = 14) +
+  #annotate("text", x = 4.9, y = "drought", label = "***", size = 14) +
   scale_color_manual(values = c("#377eb8", "#4daf4a")) +
   ggtitle("Temperate Broadleaf and Mixed Forests") +
   xlim(-1.2, 5) +
@@ -203,7 +203,7 @@ D <- ggplot() +
   geom_jitter(data = data[data$Olson_Biome == "Mediterranean Forests, Woodlands and Scrub" & data$carbon_vs_mortality == 2,], aes(x = lrr, y = disturbance_type, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
   geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
-  annotate("text", x = 4.9, y = "fire", label = "***", size = 14) +
+  annotate("text", x = 4.9, y = "fire", label = "*", size = 14) +
   scale_color_manual(values = c("#e41a1c", "#377eb8")) +
   xlim(-1.2, 5) +
   ggtitle("Mediterranean Forests, Woodlands and Scrub") +
@@ -219,5 +219,5 @@ AB
 AC
 AE")
 
-ggsave("figures/figure5.png", width = 17, height = 10)
-ggsave("figures/illustrator/figure5.pdf", width = 17, height = 10)
+ggsave("figures/figure5.png", width = 13, height = 10)
+ggsave("figures/illustrator/figure5.pdf", width = 13, height = 10)
