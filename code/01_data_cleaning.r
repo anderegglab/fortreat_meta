@@ -80,25 +80,30 @@ full_data[full_data$carbon_vs_mortality == 2, c("mean_treatment", "mean_control"
 ##---------------------------------------------------------------
 
 ## run grouping script
-full_data_grouped <- group_data(full_data)
+full_data_grouped <- group_data(full_data) ## introduces one NaN in Ogaya et al, but only for SD, which we don't need :)
 
 ##---------------------------------------------------------------
 ## 3. Calculate effect sizes and standard errors
 ##---------------------------------------------------------------
 ## for now we will add a small number when survivorship is 0:
 ## where we do, we'll always impute the SE though.
+## Also adding a new flag for sensitivity analysis later.
+full_data_grouped$zeroSurv <- 0
+
+full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_treatment == 0, "zeroSurv"] <- 1
 full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_treatment == 0, c("sd_treatment", "se_treatment")] <- NA
 
 full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_treatment == 0, c("mean_treatment")] <-
   full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_treatment == 0, c("mean_treatment")] + 0.01
 
+full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_control == 0, "zeroSurv"] <- 1
 full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_control == 0, c("sd_control", "se_control")] <- NA
 
 full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_control == 0, c("mean_control")] <-
   full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_control == 0, c("mean_control")] + 0.01
 
-full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_treatment == 0.01, c("mean_treatment", "sd_treatment", "se_treatment")] # looks good
-full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_control == 0.01, c("mean_control", "sd_control", "se_control")] # looks good
+full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_treatment == 0.01, c("mean_treatment", "sd_treatment", "se_treatment", "zeroSurv")] # looks good
+full_data_grouped[full_data_grouped$carbon_vs_mortality == 2 & full_data_grouped$mean_control == 0.01, c("mean_control", "sd_control", "se_control", "zeroSurv")] # looks good
 
 ## calculate log response ratio
 full_data_grouped$lrr <- lrr(full_data_grouped$mean_treatment,
@@ -153,7 +158,18 @@ full_data_grouped[full_data_grouped$thin == "yes", "thin_bin"] <- 1
 full_data_grouped$burn_bin <- 0
 full_data_grouped[full_data_grouped$burn == "yes", "burn_bin"] <- 1
 
+##---------------------------------------------------------------
+## Duplicate study 60, which we use for both insects and drought:
+##---------------------------------------------------------------
+
+temp <- full_data_grouped[full_data_grouped$studyID == 60,]
+temp$disturbance_type <- "drought"
+temp$studyID <- 1060 # giving it a unique studyID just in case
+full_data_grouped <- rbind(full_data_grouped, temp) ; rm(temp)
+
+##---------------------------------------------------------------
 ## missing data summaries
+##---------------------------------------------------------------
 length(unique(full_data_grouped[is.na(full_data_grouped$lrr_se),"studyID"]))
 length(unique(full_data_grouped$studyID))
 

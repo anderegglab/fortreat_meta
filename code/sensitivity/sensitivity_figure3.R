@@ -25,7 +25,7 @@ source("code/00_functions.r")
 data <- read.csv("data/processed_data/data_cleaned.csv")
 
 ## Drop uncertain studies:
-data <- data[data$Nis2 == 0 & data$NoTrueControl == 0 & data$mortality_attribution_uncertain == 0,]
+data <- data[data$Nis2 == 0 & data$NoTrueControl == 0 & data$mortality_attribution_uncertain == 0 & data$zeroSurv == 0,]
 
 ## TODO For now I'm not saving any tables or Rdata files, can change later if needed.
 
@@ -79,7 +79,7 @@ A <- ggplot() +
   geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 12) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   scale_color_manual(values = c("#e41a1c", "#377eb8", "grey")) +
-  annotate("text", y = "drought", x = 1.5, label = "***", size = 15) +
+  annotate("text", y = "drought", x = 1.5, label = "*", size = 15) +
   xlab("Log Response Ratio") +
   ggtitle("Treatment Effects: Carbon") +
   theme_bw() +
@@ -122,43 +122,44 @@ drought_carbon_imputed <- impute_data(data[data$disturbance_type == "drought" & 
 fire_carbon_fit <- with(fire_carbon_imputed,
                         rma(yi = lrr,
                             sei = lrr_se,
-                            mods = ~ 0 + thin_bin + burn_bin))
-#saveRDS(fire_carbon_fit, "data/model_objects/fire_carbon_fit.rds")
+                            mods = ~ 0 + thin_bin * burn_bin))
+saveRDS(fire_carbon_fit, "data/model_objects/fire_carbon_fit.rds")
 
 drought_carbon_fit <- with(drought_carbon_imputed,
                            rma(yi = lrr,
                                sei = lrr_se,
                                mods = ~ 0 + thin_bin * burn_bin))
-#saveRDS(drought_carbon_fit, "data/model_objects/drought_carbon_fit.rds")
+saveRDS(drought_carbon_fit, "data/model_objects/drought_carbon_fit.rds")
 
 insect_carbon_fit <- with(insect_carbon_imputed,
                           rma(yi = lrr,
                               sei = lrr_se,
                               mods = ~ 0 + thin_bin * burn_bin))
-#saveRDS(insect_carbon_fit, "data/model_objects/insect_carbon_fit.rds")
+saveRDS(insect_carbon_fit, "data/model_objects/insect_carbon_fit.rds")
 
 pool_fire_carbon <- summary(pool(fire_carbon_fit))
 pool_fire_carbon[-1] <- round(pool_fire_carbon[-1], digits = 3)
 pool_fire_carbon
 
-#table_gen(pool_fire_carbon, "trtclass_fire_carbon.csv")
+table_gen(pool_fire_carbon, "trtclass_fire_carbon.csv")
 
 pool_drought_carbon <- summary(pool(drought_carbon_fit))
 pool_drought_carbon[-1] <- round(pool_drought_carbon[-1], digits = 3)
 pool_drought_carbon
 
-#table_gen(pool_drought_carbon, "trtclass_drought_carbon.csv")
+table_gen(pool_drought_carbon, "trtclass_drought_carbon.csv")
 
 pool_insect_carbon <- summary(pool(insect_carbon_fit))
 pool_insect_carbon[-1] <- round(pool_insect_carbon[-1], digits = 3)
 pool_insect_carbon
 
-#table_gen(pool_insect_carbon, "trtclass_insect_carbon.csv")
+table_gen(pool_insect_carbon, "trtclass_insect_carbon.csv")
 
-pdata <- data.frame(trt_class = factor(c("thinning", "rx_fire"), levels = c("thinning", "rx_fire")))
+pdata <- data.frame(trt_class = factor(c("thinning", "rx_fire", "both"), levels = c("thinning", "rx_fire", "both")))
 pdata$disturbance_type = "fire"
 pdata$mean[1] <- pool_fire_carbon$estimate[1]
 pdata$mean[2] <- pool_fire_carbon$estimate[2]
+pdata$mean[3] <- pool_fire_carbon$estimate[1] + pool_fire_carbon$estimate[2] + pool_fire_carbon$estimate[3]
 pdata$se <- pool_fire_carbon$std.error
 pdata$lower <- pdata$mean - 1.97*pdata$se
 pdata$upper <- pdata$mean + 1.97*pdata$se
@@ -168,8 +169,8 @@ B <- ggplot() +
   geom_jitter(data = data[data$disturbance_type == "fire" & data$carbon_vs_mortality == 1,], aes(x = lrr, y = trt_class, color = trt_class), height = 0.2, size = 3, alpha = 0.5) +
   geom_point(data = pdata, aes(x = mean, y = trt_class, color = trt_class), size = 8) +
   geom_linerange(data = pdata, aes(y = trt_class, xmin = lower, xmax = upper, color = trt_class), size = 3) +
-  annotate("text", y = "thinning", x = 4.6, label = "***", size = 15, col = "grey") +
-  scale_color_manual(values = c("grey", "#e41a1c")) +
+  annotate("text", y = "thinning", x = 4.6, label = "*", size = 15, col = "grey") +
+  scale_color_manual(values = c("grey", "#e41a1c","grey")) +
   xlab("Log Response Ratio") +
   xlim(-1.5, 5) +
   theme_bw() +
@@ -192,8 +193,8 @@ C <- ggplot() +
   geom_jitter(data = data[data$disturbance_type == "drought" & data$carbon_vs_mortality == 1,], aes(x = lrr, y = trt_class, color = trt_class), height = 0.2, size = 3, alpha = 0.5) +
   geom_point(data = pdata, aes(x = mean, y = trt_class, color = trt_class), size = 8) +
   geom_linerange(data = pdata, aes(y = trt_class, xmin = lower, xmax = upper, color = trt_class), size = 3) +
-  annotate("text", y = "both", x = 4.6, label = "***", size = 15, col = "grey") +
-  annotate("text", y = "thinning", x = 4.6, label = "***", size = 15) +
+  annotate("text", y = "both", x = 4.6, label = "*", size = 15, col = "grey") +
+  annotate("text", y = "thinning", x = 4.6, label = "*", size = 15) +
   scale_color_manual(values = c("#377eb8", "grey", "grey")) +
   xlim(-1.5, 5) +
   theme_bw() +
@@ -230,4 +231,4 @@ AB
 AC
 AE")
 
-ggsave("figures/sensitivity/total_figure3.png", width = 14, height = 12)
+ggsave("figures/sensitivity/sensitivity_figure3.png", width = 14, height = 12)

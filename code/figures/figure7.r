@@ -245,7 +245,7 @@ p3 <- ggplot() +
   geom_line(data = pdata[pdata$disturbance_type == "insect",], aes(x = cwd, y = mean, color = disturbance_type), size = 3) +
   geom_point(data = data[data$disturbance_type == "insect" & data$carbon_vs_mortality == 1,], aes(x = cwd, y = lrr, color = disturbance_type), size = 5) +
   ggtitle("Insect") +
-  annotate("text", y = 2.5, x = 1500, label = "***", size = 15) +
+  annotate("text", y = 2.5, x = 1500, label = "*", size = 15) +
   scale_x_continuous(limits = c(min(pdata$cwd), max(pdata$cwd)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-2.5, 3), expand = c(0,0)) +
   scale_color_manual(values = c("#4daf4a")) +

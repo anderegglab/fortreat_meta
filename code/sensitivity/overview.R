@@ -5,6 +5,7 @@ head(data)
 n2 <- data[data$Nis2 == 1,]
 noc <- data[data$NoTrueControl == 1,]
 mor <- data[data$mortality_attribution_uncertain == 1,]
+zer <- data[data$zeroSurv == 1,]
 
 n2[,c("studyID", "disturbance_type", "trt_class", "carbon_vs_mortality")]
 unique(n2$studyID)
@@ -36,14 +37,24 @@ unique(mor$studyID)
 # surviv - drought - thinning (1 / 3)
 # surviv - insects - rx_fire (3 / 9)
 
+zer[,c("studyID", "disturbance_type", "trt_class", "carbon_vs_mortality")]
+unique(zer$studyID)
+### Zero mortality:
+# surviv: drought & insects
+
+# surviv - fire - thinning (2 / 6)
+# surviv - fire - both (2 / 2)
+
+
 # Total:
 # carbon: fire & drought
-# surviv: drought & insects
+# surviv: drought & insects & fire
 
 # carbon - fire - rx_fire
 # carbon - drought - thinning
 # surviv - drought - thinning
 # surviv - insects - thinning
 # surviv - insects - rx_fire
-
+# surviv - fire - thinning
+# surviv - fire - both
 

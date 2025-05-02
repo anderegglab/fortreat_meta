@@ -141,7 +141,7 @@ B <- ggplot() +
   geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   #annotate("text", x = 4.9, y = "fire", label = "***", size = 14) +
-  annotate("text", x = 4.9, y = "drought", label = "*", size = 14) +
+  annotate("text", x = 4.9, y = "fire", label = "*", size = 14) +
   scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
   ggtitle("Temperate Conifer Forests") +
   xlim(-1.2, 5) +
