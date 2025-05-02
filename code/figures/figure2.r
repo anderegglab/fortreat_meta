@@ -189,7 +189,7 @@ C <- ggplot() +
   geom_jitter(data = data[data$disturbance_type == "drought" & data$carbon_vs_mortality == 2,], aes(x = lrr, y = trt_class, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
   geom_point(data = pdata, aes(x = mean, y = trt_class, color = disturbance_type), size = 6) +
   geom_linerange(data = pdata, aes(y = trt_class, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
-  annotate("text", y = "both", x = 4.8, label = "*", size = 15) +
+  annotate("text", y = "thinning", x = 4.8, label = "*", size = 15) +
   scale_color_manual(values = c("#377eb8")) +
   xlim(-0.5, 5) +
   theme_bw() +
