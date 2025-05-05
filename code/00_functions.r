@@ -1,4 +1,13 @@
 
+##---------------------------------------------------------------
+## Define functions and utility vars for general use
+##---------------------------------------------------------------
+
+## variables
+red <- "#ff3319"
+yellow <- "#ffab00"
+blue <- "#0057ba"
+
 ## define functions
 overall_mean <- function(mean, n) {
   return(sum(mean * n) / sum(n))

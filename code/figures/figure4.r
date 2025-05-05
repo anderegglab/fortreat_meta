@@ -96,72 +96,63 @@ for (i in 1:100) {
 }
 
 pdata <- data.frame(disturbance_type = factor(rep(c("fire", "drought", "insect"), each = 20), levels = c("fire", "drought", "insect")),
-                    ba_removed = rep(seq(-2, 2.5, length.out = 20), times = 3))
+                    ba_removed = rep(seq(-2, 2, length.out = 20), times = 3))
 
 pdata$mean <- rowMeans(out[[1]])
 pdata$lower <- rowMeans(out[[2]])
 pdata$upper <- rowMeans(out[[3]])
 
-
-p <- ggplot() +
-  geom_hline(yintercept = 0, color = "black", size = 2) +
-  geom_ribbon(data = pdata, aes(x = ba_removed, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
-  geom_line(data = pdata, aes(x = ba_removed, y = mean, color = disturbance_type), size = 3) +
-  geom_point(data = data[data$carbon_vs_mortality == 2,], aes(x = scale(ba_removed), y = lrr, color = disturbance_type), size = 5) +
-  scale_x_continuous(limits = c(-2, 2.5), expand = c(0,0)) +
-  scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
-  scale_fill_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
-  theme_bw() +
-  theme(legend.position = "none", axis.title = element_blank())
-p
-
+pdata$ba_removed <- pdata$ba_removed * sd(data[data$carbon_vs_mortality == 2, "ba_removed"], na.rm = TRUE) + mean(data[data$carbon_vs_mortality == 2,"ba_removed"], na.rm = TRUE)
 
 p1 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
   geom_ribbon(data = pdata[pdata$disturbance_type == "fire",], aes(x = ba_removed, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
   geom_line(data = pdata[pdata$disturbance_type == "fire",], aes(x = ba_removed, y = mean, color = disturbance_type), size = 3) +
-  geom_point(data = data[data$disturbance_type == "fire" & data$carbon_vs_mortality == 2,], aes(x = scale(ba_removed), y = lrr, color = disturbance_type), size = 5) +
-  scale_x_continuous(limits = c(-2, 2.5), expand = c(0,0)) +
+  geom_point(data = data[data$disturbance_type == "fire" & data$carbon_vs_mortality == 2,], aes(x = ba_removed, y = lrr, color = disturbance_type), size = 5) +
+  scale_x_continuous(limits = c(min(pdata$ba_removed), max(pdata$ba_removed)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-1, 5), expand = c(0,0)) +
-  scale_color_manual(values = c("#e41a1c")) +
-  scale_fill_manual(values = c("#e41a1c")) +
+  scale_color_manual(values = c(red)) +
+  scale_fill_manual(values = c(red)) +
   # annotate("text", y = 4.5, x = -1.5, label = "***", size = 15) +
   ylab("Log Response Ratio") +
   ggtitle("Fire") +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_blank(), axis.title.y = element_text(size = 16),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p1
 
 p2 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
   geom_ribbon(data = pdata[pdata$disturbance_type == "drought",], aes(x = ba_removed, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
   geom_line(data = pdata[pdata$disturbance_type == "drought",], aes(x = ba_removed, y = mean, color = disturbance_type), size = 3) +
-  geom_point(data = data[data$disturbance_type == "drought" & data$carbon_vs_mortality == 2,], aes(x = scale(ba_removed), y = lrr, color = disturbance_type), size = 5) +
-  scale_x_continuous(limits = c(-2, 2.5), expand = c(0,0)) +
+  geom_point(data = data[data$disturbance_type == "drought" & data$carbon_vs_mortality == 2,], aes(x = ba_removed, y = lrr, color = disturbance_type), size = 5) +
+  scale_x_continuous(limits = c(min(pdata$ba_removed), max(pdata$ba_removed)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-1, 5), expand = c(0,0)) +
-  scale_color_manual(values = c("#377eb8")) +
-  scale_fill_manual(values = c("#377eb8")) +
+  scale_color_manual(values = c(blue)) +
+  scale_fill_manual(values = c(blue)) +
   xlab("BA Removed (scaled)") +
   ggtitle("Drought") +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_text(size = 16), axis.title.y = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p2
 
 p3 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
   geom_ribbon(data = pdata[pdata$disturbance_type == "insect",], aes(x = ba_removed, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
   geom_line(data = pdata[pdata$disturbance_type == "insect",], aes(x = ba_removed, y = mean, color = disturbance_type), size = 3) +
-  geom_point(data = data[data$disturbance_type == "insect" & data$carbon_vs_mortality == 2,], aes(x = scale(ba_removed), y = lrr, color = disturbance_type), size = 5) +
-  scale_x_continuous(limits = c(-2, 2.5), expand = c(0,0)) +
+  geom_point(data = data[data$disturbance_type == "insect" & data$carbon_vs_mortality == 2,], aes(x = ba_removed, y = lrr, color = disturbance_type), size = 5) +
+  scale_x_continuous(limits = c(min(pdata$ba_removed), max(pdata$ba_removed)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-1, 5), expand = c(0,0)) +
-  scale_color_manual(values = c("#4daf4a")) +
-  scale_fill_manual(values = c("#4daf4a")) +
+  scale_color_manual(values = c(yellow)) +
+  scale_fill_manual(values = c(yellow)) +
   ggtitle("Insect") +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p3
 
 mort_plot <- p1 + p2 + p3 + plot_layout(
@@ -211,57 +202,62 @@ for (i in 1:100) {
 }
 
 pdata <- data.frame(disturbance_type = factor(rep(c("fire", "drought", "insect"), each = 20), levels = c("fire", "drought", "insect")),
-                    ba_removed = rep(seq(-2, 2.5, length.out = 20), times = 3))
+                    ba_removed = rep(seq(-2, 2, length.out = 20), times = 3))
 
 pdata$mean <- rowMeans(out[[1]])
 pdata$lower <- rowMeans(out[[2]])
 pdata$upper <- rowMeans(out[[3]])
 
+pdata$ba_removed <- pdata$ba_removed * sd(data[data$carbon_vs_mortality == 1, "ba_removed"], na.rm = TRUE) + mean(data[data$carbon_vs_mortality == 1,"ba_removed"], na.rm = TRUE)
+
 p1 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
   geom_ribbon(data = pdata[pdata$disturbance_type == "fire",], aes(x = ba_removed, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
   geom_line(data = pdata[pdata$disturbance_type == "fire",], aes(x = ba_removed, y = mean, color = disturbance_type), size = 3) +
-  geom_point(data = data[data$disturbance_type == "fire" & data$carbon_vs_mortality == 1,], aes(x = scale(ba_removed), y = lrr, color = disturbance_type), size = 5) +
-  scale_x_continuous(limits = c(-2, 2.5), expand = c(0,0)) +
+  geom_point(data = data[data$disturbance_type == "fire" & data$carbon_vs_mortality == 1,], aes(x = ba_removed, y = lrr, color = disturbance_type), size = 5) +
+  scale_x_continuous(limits = c(min(pdata$ba_removed), max(pdata$ba_removed)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-2, 5), expand = c(0,0)) +
-  scale_color_manual(values = c("#e41a1c")) +
-  scale_fill_manual(values = c("#e41a1c")) +
+  scale_color_manual(values = c(red)) +
+  scale_fill_manual(values = c(red)) +
   ylab("Log Response Ratio") +
   ggtitle("Fire") +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_blank(), axis.title.y = element_text(size = 16),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p1
 
 p2 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
   geom_ribbon(data = pdata[pdata$disturbance_type == "drought",], aes(x = ba_removed, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
   geom_line(data = pdata[pdata$disturbance_type == "drought",], aes(x = ba_removed, y = mean, color = disturbance_type), size = 3) +
-  geom_point(data = data[data$disturbance_type == "drought" & data$carbon_vs_mortality == 1,], aes(x = scale(ba_removed), y = lrr, color = disturbance_type), size = 5) +
-  scale_x_continuous(limits = c(-2, 2.5), expand = c(0,0)) +
+  geom_point(data = data[data$disturbance_type == "drought" & data$carbon_vs_mortality == 1,], aes(x = ba_removed, y = lrr, color = disturbance_type), size = 5) +
+  scale_x_continuous(limits = c(min(pdata$ba_removed), max(pdata$ba_removed)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-2, 5), expand = c(0,0)) +
-  scale_color_manual(values = c("#377eb8")) +
-  scale_fill_manual(values = c("#377eb8")) +
+  scale_color_manual(values = c(blue)) +
+  scale_fill_manual(values = c(blue)) +
   xlab("BA Removed (scaled)") +
   ggtitle("Drought") +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_text(size = 16), axis.title.y = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p2
 
 p3 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
   geom_ribbon(data = pdata[pdata$disturbance_type == "insect",], aes(x = ba_removed, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
   geom_line(data = pdata[pdata$disturbance_type == "insect",], aes(x = ba_removed, y = mean, color = disturbance_type), size = 3) +
-  geom_point(data = data[data$disturbance_type == "insect" & data$carbon_vs_mortality == 1,], aes(x = scale(ba_removed), y = lrr, color = disturbance_type), size = 5) +
-  scale_x_continuous(limits = c(-2, 2.5), expand = c(0,0)) +
+  geom_point(data = data[data$disturbance_type == "insect" & data$carbon_vs_mortality == 1,], aes(x = ba_removed, y = lrr, color = disturbance_type), size = 5) +
+  scale_x_continuous(limits = c(min(pdata$ba_removed), max(pdata$ba_removed)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-2, 5), expand = c(0,0)) +
-  scale_color_manual(values = c("#4daf4a")) +
-  scale_fill_manual(values = c("#4daf4a")) +
+  scale_color_manual(values = c(yellow)) +
+  scale_fill_manual(values = c(yellow)) +
   ggtitle("Insect") +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p3
 
 carbon_plot <- p1 + p2 + p3 + plot_layout(

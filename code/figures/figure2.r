@@ -74,7 +74,7 @@ A <- ggplot() +
   geom_jitter(data = data[data$carbon_vs_mortality == 2,], aes(x = lrr, y = disturbance_type, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
   geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
-  scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
+  scale_color_manual(values = c(red, blue, yellow)) +
   scale_x_continuous(limits = c(-0.5, 5.5)) +
   ggtitle("Treatment Effects: Survivorship") +
   annotate("text", y = "fire", x = 5, label = "*", size = 15) +
@@ -165,7 +165,7 @@ B <- ggplot() +
   geom_jitter(data = data[data$disturbance_type == "fire" & data$carbon_vs_mortality == 2,], aes(x = lrr, y = trt_class, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
   geom_point(data = pdata, aes(x = mean, y = trt_class, color = disturbance_type), size = 6) +
   geom_linerange(data = pdata, aes(y = trt_class, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
-  scale_color_manual(values = c("#e41a1c")) +
+  scale_color_manual(values = c(red)) +
   annotate("text", y = "both", x = 4.8, label = "*", size = 15) +
   annotate("text", y = "thinning", x = 4.8, label = "*", size = 15) +
   xlab("Log Response Ratio") +
@@ -190,7 +190,7 @@ C <- ggplot() +
   geom_point(data = pdata, aes(x = mean, y = trt_class, color = disturbance_type), size = 6) +
   geom_linerange(data = pdata, aes(y = trt_class, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   annotate("text", y = "thinning", x = 4.8, label = "*", size = 15) +
-  scale_color_manual(values = c("#377eb8")) +
+  scale_color_manual(values = c(blue)) +
   xlim(-0.5, 5) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank(), axis.text.y = element_text(face = "italic", size = 12))
@@ -211,7 +211,7 @@ D <- ggplot() +
   geom_point(data = pdata, aes(x = mean, y = trt_class, color = disturbance_type), size = 6) +
   geom_linerange(data = pdata, aes(y = trt_class, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   annotate("text", y = "thinning", x = 4.8, label = "*", size = 15) +
-  scale_color_manual(values = c("#4daf4a")) +
+  scale_color_manual(values = c(yellow)) +
   xlim(-0.5, 5) +
   theme_bw() +
   theme(legend.position = "none", axis.title.y = element_blank(), axis.text.y = element_text(face = "italic", size = 12))

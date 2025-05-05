@@ -100,10 +100,11 @@ p <- ggplot() +
   geom_line(data = pdata, aes(x = cwd, y = mean, color = disturbance_type), size = 3) +
   geom_point(data = data[data$carbon_vs_mortality == 2,], aes(x = cwd, y = lrr, color = disturbance_type), size = 5) +
   scale_x_continuous(limits = c(min(pdata$cwd), max(pdata$cwd)), expand = c(0,0)) +
-  scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
-  scale_fill_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
+  scale_color_manual(values = c(red, blue, yellow)) +
+  scale_fill_manual(values = c(red, blue, yellow)) +
   theme_bw() +
-  theme(legend.position = "none", axis.title = element_blank())
+  theme(legend.position = "none", axis.title = element_blank(),
+        panel.grid = element_blank())
 p
 
 
@@ -116,11 +117,12 @@ p1 <- ggplot() +
   scale_y_continuous(limits = c(-1, 5), expand = c(0,0)) +
   ylab("Log Response Ratio") +
   ggtitle("Fire") +
-  scale_color_manual(values = c("#e41a1c")) +
-  scale_fill_manual(values = c("#e41a1c")) +
+  scale_color_manual(values = c(red)) +
+  scale_fill_manual(values = c(red)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_blank(), axis.title.y = element_text(size = 16),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p1
 
 p2 <- ggplot() +
@@ -132,11 +134,12 @@ p2 <- ggplot() +
   xlab("Climatic Water Deficit") +
   scale_x_continuous(limits = c(min(pdata$cwd), max(pdata$cwd)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-1, 5), expand = c(0,0)) +
-  scale_color_manual(values = c("#377eb8")) +
-  scale_fill_manual(values = c("#377eb8")) +
+  scale_color_manual(values = c(blue)) +
+  scale_fill_manual(values = c(blue)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_text(size = 16), axis.title.y = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p2
 
 p3 <- ggplot() +
@@ -147,11 +150,12 @@ p3 <- ggplot() +
   ggtitle("Insect") +
   scale_x_continuous(limits = c(min(pdata$cwd), max(pdata$cwd)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-1, 5), expand = c(0,0)) +
-  scale_color_manual(values = c("#4daf4a")) +
-  scale_fill_manual(values = c("#4daf4a")) +
+  scale_color_manual(values = c(yellow)) +
+  scale_fill_manual(values = c(yellow)) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p3
 
 
@@ -216,11 +220,12 @@ p1 <- ggplot() +
   scale_y_continuous(limits = c(-2.5,3), expand = c(0,0)) +
   ylab("Log Response Ratio") +
   ggtitle("Fire") +
-  scale_color_manual(values = c("#e41a1c")) +
-  scale_fill_manual(values = c("#e41a1c")) +
+  scale_color_manual(values = c(red)) +
+  scale_fill_manual(values = c(red)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_blank(), axis.title.y = element_text(size = 16),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p1
 
 p2 <- ggplot() +
@@ -232,11 +237,12 @@ p2 <- ggplot() +
   xlab("Climatic Water Deficit") +
   scale_x_continuous(limits = c(min(pdata$cwd), max(pdata$cwd)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-2.5, 3), expand = c(0,0)) +
-  scale_color_manual(values = c("#377eb8")) +
-  scale_fill_manual(values = c("#377eb8")) +
+  scale_color_manual(values = c(blue)) +
+  scale_fill_manual(values = c(blue)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_text(size = 16), axis.title.y = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p2
 
 p3 <- ggplot() +
@@ -248,11 +254,12 @@ p3 <- ggplot() +
   annotate("text", y = 2.5, x = 1500, label = "*", size = 15) +
   scale_x_continuous(limits = c(min(pdata$cwd), max(pdata$cwd)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-2.5, 3), expand = c(0,0)) +
-  scale_color_manual(values = c("#4daf4a")) +
-  scale_fill_manual(values = c("#4daf4a")) +
+  scale_color_manual(values = c(yellow)) +
+  scale_fill_manual(values = c(yellow)) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p3
 
 
@@ -343,10 +350,11 @@ p <- ggplot() +
   geom_point(data = data[data$carbon_vs_mortality == 2,], aes(x = mat, y = lrr, color = disturbance_type), size = 5) +
   scale_x_continuous(limits = c(min(pdata$mat), max(pdata$mat)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-1, 5), expand = c(0,0)) +
-  scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
-  scale_fill_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
+  scale_color_manual(values = c(red, blue, yellow)) +
+  scale_fill_manual(values = c(red, blue, yellow)) +
   theme_bw() +
-  theme(legend.position = "none", axis.title = element_blank())
+  theme(legend.position = "none", axis.title = element_blank(),
+        panel.grid = element_blank())
 p
 
 p1 <- ggplot() +
@@ -358,11 +366,12 @@ p1 <- ggplot() +
   scale_y_continuous(limits = c(-1,5), expand = c(0,0)) +
   ylab("Log Response Ratio") +
   ggtitle("Fire") +
-  scale_color_manual(values = c("#e41a1c")) +
-  scale_fill_manual(values = c("#e41a1c")) +
+  scale_color_manual(values = c(red)) +
+  scale_fill_manual(values = c(red)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_blank(), axis.title.y = element_text(size = 16),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p1
 
 p2 <- ggplot() +
@@ -374,11 +383,12 @@ p2 <- ggplot() +
   xlab("Mean Annual Temperature") +
   scale_x_continuous(limits = c(min(pdata$mat), max(pdata$mat)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-1, 5), expand = c(0,0)) +
-  scale_color_manual(values = c("#377eb8")) +
-  scale_fill_manual(values = c("#377eb8")) +
+  scale_color_manual(values = c(blue)) +
+  scale_fill_manual(values = c(blue)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_text(size = 16), axis.title.y = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p2
 
 p3 <- ggplot() +
@@ -389,11 +399,12 @@ p3 <- ggplot() +
   ggtitle("Insect") +
   scale_x_continuous(limits = c(min(pdata$mat), max(pdata$mat)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-1, 5), expand = c(0,0)) +
-  scale_color_manual(values = c("#4daf4a")) +
-  scale_fill_manual(values = c("#4daf4a")) +
+  scale_color_manual(values = c(yellow)) +
+  scale_fill_manual(values = c(yellow)) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p3
 
 p1 + p2 + p3 +
@@ -458,11 +469,12 @@ p1 <- ggplot() +
   annotate("text", y = 2.5, x = 18, label = "*", size = 15) +
   ylab("Log Response Ratio") +
   ggtitle("Fire") +
-  scale_color_manual(values = c("#e41a1c")) +
-  scale_fill_manual(values = c("#e41a1c")) +
+  scale_color_manual(values = c(red)) +
+  scale_fill_manual(values = c(red)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_blank(), axis.title.y = element_text(size = 16),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p1
 
 p2 <- ggplot() +
@@ -474,11 +486,12 @@ p2 <- ggplot() +
   xlab("Mean Annual Temperature") +
   scale_x_continuous(limits = c(min(pdata$mat), max(pdata$mat)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-5, 3), expand = c(0,0)) +
-  scale_color_manual(values = c("#377eb8")) +
-  scale_fill_manual(values = c("#377eb8")) +
+  scale_color_manual(values = c(blue)) +
+  scale_fill_manual(values = c(blue)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_text(size = 16), axis.title.y = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p2
 
 p3 <- ggplot() +
@@ -490,19 +503,20 @@ p3 <- ggplot() +
   annotate("text", y = 2.5, x = 18, label = "*", size = 15) +
   scale_x_continuous(limits = c(min(pdata$mat), max(pdata$mat)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-5, 3), expand = c(0,0)) +
-  scale_color_manual(values = c("#4daf4a")) +
-  scale_fill_manual(values = c("#4daf4a")) +
+  scale_color_manual(values = c(yellow)) +
+  scale_fill_manual(values = c(yellow)) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p3
 
 p1 + p2 + p3 +
   plot_layout(
   design = "ABC")
 
-ggsave("figures/figure7D.png", width = 20, height = 8)
-ggsave("figures/illustrator/figure7D.pdf", width = 20, height = 8)
+ggsave("figures/figure7D.png", width = 10, height = 4)
+ggsave("figures/illustrator/figure7D.pdf", width = 10, height = 4)
 
 
 ##---------------------------------------------------------------
@@ -585,10 +599,11 @@ p <- ggplot() +
   geom_point(data = data[data$carbon_vs_mortality == 2,], aes(x = map, y = lrr, color = disturbance_type), size = 5) +
   scale_x_continuous(limits = c(min(pdata$map), max(pdata$map)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-3, 5), expand = c(0,0)) +
-  scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
-  scale_fill_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
+  scale_color_manual(values = c(red, blue, yellow)) +
+  scale_fill_manual(values = c(red, blue, yellow)) +
   theme_bw() +
-  theme(legend.position = "none", axis.title = element_blank())
+  theme(legend.position = "none", axis.title = element_blank(),
+        panel.grid = element_blank())
 p
 
 p1 <- ggplot() +
@@ -600,11 +615,12 @@ p1 <- ggplot() +
   scale_y_continuous(limits = c(-3,5), expand = c(0,0)) +
   ylab("Log Response Ratio") +
   ggtitle("Fire") +
-  scale_color_manual(values = c("#e41a1c")) +
-  scale_fill_manual(values = c("#e41a1c")) +
+  scale_color_manual(values = c(red)) +
+  scale_fill_manual(values = c(red)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_blank(), axis.title.y = element_text(size = 16),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p1
 
 p2 <- ggplot() +
@@ -616,11 +632,12 @@ p2 <- ggplot() +
   xlab("Mean Annual Precipitation") +
   scale_x_continuous(limits = c(min(pdata$map), max(pdata$map)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-3, 5), expand = c(0,0)) +
-  scale_color_manual(values = c("#377eb8")) +
-  scale_fill_manual(values = c("#377eb8")) +
+  scale_color_manual(values = c(blue)) +
+  scale_fill_manual(values = c(blue)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_text(size = 16), axis.title.y = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p2
 
 p3 <- ggplot() +
@@ -631,11 +648,12 @@ p3 <- ggplot() +
   ggtitle("Insect") +
   scale_x_continuous(limits = c(min(pdata$map), max(pdata$map)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-3, 5), expand = c(0,0)) +
-  scale_color_manual(values = c("#4daf4a")) +
-  scale_fill_manual(values = c("#4daf4a")) +
+  scale_color_manual(values = c(yellow)) +
+  scale_fill_manual(values = c(yellow)) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p3
 
 p1 + p2 + p3 +
@@ -699,11 +717,12 @@ p1 <- ggplot() +
   scale_y_continuous(limits = c(-5,3), expand = c(0,0)) +
   ylab("Log Response Ratio") +
   ggtitle("Fire") +
-  scale_color_manual(values = c("#e41a1c")) +
-  scale_fill_manual(values = c("#e41a1c")) +
+  scale_color_manual(values = c(red)) +
+  scale_fill_manual(values = c(red)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_blank(), axis.title.y = element_text(size = 16),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p1
 
 p2 <- ggplot() +
@@ -715,11 +734,12 @@ p2 <- ggplot() +
   xlab("Mean Annual Precipitation") +
   scale_x_continuous(limits = c(min(pdata$map), max(pdata$map)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-5, 3), expand = c(0,0)) +
-  scale_color_manual(values = c("#377eb8")) +
-  scale_fill_manual(values = c("#377eb8")) +
+  scale_color_manual(values = c(blue)) +
+  scale_fill_manual(values = c(blue)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_text(size = 16), axis.title.y = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p2
 
 p3 <- ggplot() +
@@ -731,19 +751,20 @@ p3 <- ggplot() +
   annotate("text", y = 2.5, x = 18, label = "*", size = 15) +
   scale_x_continuous(limits = c(min(pdata$map), max(pdata$map)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-5, 3), expand = c(0,0)) +
-  scale_color_manual(values = c("#4daf4a")) +
-  scale_fill_manual(values = c("#4daf4a")) +
+  scale_color_manual(values = c(yellow)) +
+  scale_fill_manual(values = c(yellow)) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p3
 
 p1 + p2 + p3 +
   plot_layout(
   design = "ABC")
 
-ggsave("figures/figure7F.png", width = 20, height = 8)
-ggsave("figures/illustrator/figure7F.pdf", width = 20, height = 8)
+ggsave("figures/figure7F.png", width = 10, height = 4)
+ggsave("figures/illustrator/figure7F.pdf", width = 10, height = 4)
 
 
 ##---------------------------------------------------------------
@@ -826,10 +847,11 @@ p <- ggplot() +
   geom_point(data = data[data$carbon_vs_mortality == 2,], aes(x = vpd, y = lrr, color = disturbance_type), size = 5) +
   scale_x_continuous(limits = c(min(pdata$vpd), max(pdata$vpd)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-3, 5), expand = c(0,0)) +
-  scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
-  scale_fill_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
+  scale_color_manual(values = c(red, blue, yellow)) +
+  scale_fill_manual(values = c(red, blue, yellow)) +
   theme_bw() +
-  theme(legend.position = "none", axis.title = element_blank())
+  theme(legend.position = "none", axis.title = element_blank(),
+        panel.grid = element_blank())
 p
 
 p1 <- ggplot() +
@@ -841,11 +863,12 @@ p1 <- ggplot() +
   scale_y_continuous(limits = c(-3,5), expand = c(0,0)) +
   ylab("Log Response Ratio") +
   ggtitle("Fire") +
-  scale_color_manual(values = c("#e41a1c")) +
-  scale_fill_manual(values = c("#e41a1c")) +
+  scale_color_manual(values = c(red)) +
+  scale_fill_manual(values = c(red)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_blank(), axis.title.y = element_text(size = 16),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p1
 
 p2 <- ggplot() +
@@ -857,11 +880,12 @@ p2 <- ggplot() +
   xlab("Vapor Pressure Deficit") +
   scale_x_continuous(limits = c(min(pdata$vpd), max(pdata$vpd)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-3, 5), expand = c(0,0)) +
-  scale_color_manual(values = c("#377eb8")) +
-  scale_fill_manual(values = c("#377eb8")) +
+  scale_color_manual(values = c(blue)) +
+  scale_fill_manual(values = c(blue)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_text(size = 16), axis.title.y = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p2
 
 p3 <- ggplot() +
@@ -872,11 +896,12 @@ p3 <- ggplot() +
   ggtitle("Insect") +
   scale_x_continuous(limits = c(min(pdata$vpd), max(pdata$vpd)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-3, 5), expand = c(0,0)) +
-  scale_color_manual(values = c("#4daf4a")) +
-  scale_fill_manual(values = c("#4daf4a")) +
+  scale_color_manual(values = c(yellow)) +
+  scale_fill_manual(values = c(yellow)) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p3
 
 p1 + p2 + p3 +
@@ -941,11 +966,12 @@ p1 <- ggplot() +
   annotate("text", y = 2.5, x = 0.4, label = "*", size = 15) +
   ylab("Log Response Ratio") +
   ggtitle("Fire") +
-  scale_color_manual(values = c("#e41a1c")) +
-  scale_fill_manual(values = c("#e41a1c")) +
+  scale_color_manual(values = c(red)) +
+  scale_fill_manual(values = c(red)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_blank(), axis.title.y = element_text(size = 16),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p1
 
 p2 <- ggplot() +
@@ -957,11 +983,12 @@ p2 <- ggplot() +
   xlab("Vapor Pressure Deficit") +
   scale_x_continuous(limits = c(min(pdata$vpd), max(pdata$vpd)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-5, 3), expand = c(0,0)) +
-  scale_color_manual(values = c("#377eb8")) +
-  scale_fill_manual(values = c("#377eb8")) +
+  scale_color_manual(values = c(blue)) +
+  scale_fill_manual(values = c(blue)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_text(size = 16), axis.title.y = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p2
 
 p3 <- ggplot() +
@@ -973,11 +1000,12 @@ p3 <- ggplot() +
   annotate("text", y = 2.5, x = 0.4, label = "*", size = 15) +
   scale_x_continuous(limits = c(min(pdata$vpd), max(pdata$vpd)), expand = c(0,0)) +
   scale_y_continuous(limits = c(-5, 3), expand = c(0,0)) +
-  scale_color_manual(values = c("#4daf4a")) +
-  scale_fill_manual(values = c("#4daf4a")) +
+  scale_color_manual(values = c(yellow)) +
+  scale_fill_manual(values = c(yellow)) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank(),
-        plot.title = element_text(face = "bold", size = 18))
+        plot.title = element_text(face = "bold", size = 18),
+        panel.grid = element_blank())
 p3
 
 p1 + p2 + p3 +

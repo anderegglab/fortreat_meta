@@ -71,7 +71,7 @@ A <- ggplot() +
   geom_jitter(data = data[data$carbon_vs_mortality == 1,], aes(x = lrr, y = disturbance_type, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
   geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
-  scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
+  scale_color_manual(values = c(red, blue, yellow)) +
   annotate("text", y = "drought", x = 1.5, label = "*", size = 15) +
   xlab("Log Response Ratio") +
   ggtitle("Treatment Effects: Carbon") +
@@ -163,7 +163,7 @@ B <- ggplot() +
   geom_point(data = pdata, aes(x = mean, y = trt_class, color = disturbance_type), size = 6) +
   geom_linerange(data = pdata, aes(y = trt_class, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   annotate("text", y = "thinning", x = 4.6, label = "*", size = 15) +
-  scale_color_manual(values = c("#e41a1c")) +
+  scale_color_manual(values = c(red)) +
   xlab("Log Response Ratio") +
   xlim(-1.5, 5) +
   theme_bw() +
@@ -188,7 +188,7 @@ C <- ggplot() +
   geom_linerange(data = pdata, aes(y = trt_class, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   annotate("text", y = "both", x = 4.6, label = "*", size = 15) +
   annotate("text", y = "thinning", x = 4.6, label = "*", size = 15) +
-  scale_color_manual(values = c("#377eb8")) +
+  scale_color_manual(values = c(blue)) +
   xlim(-1.5, 5) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank(),
@@ -209,7 +209,7 @@ D <- ggplot() +
   geom_jitter(data = data[data$disturbance_type == "insect" & data$carbon_vs_mortality == 1,], aes(x = lrr, y = trt_class, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
   geom_point(data = pdata, aes(x = mean, y = trt_class, color = disturbance_type), size = 6) +
   geom_linerange(data = pdata, aes(y = trt_class, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
-  scale_color_manual(values = c("#4daf4a")) +
+  scale_color_manual(values = c(yellow)) +
   xlim(-1.5, 5) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank(),
