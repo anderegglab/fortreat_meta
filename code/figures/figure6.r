@@ -106,7 +106,7 @@ A <- ggplot(data[data$carbon_vs_mortality == 1, ]) +
   annotate("text", x = "Temperate Broadleaf and Mixed Forests", y = 12, label = "Temperate Broadleaf \n and Mixed Forests", size = 5) +
   annotate("text", x = "Temperate Conifer Forests", y = 42, label = "Temperate Conifer \n Forests", size = 5) +
   ggtitle("Biome Effects: Carbon") +
-  scale_fill_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
+  scale_fill_manual(values = c(red, blue, yellow)) +
   scale_y_continuous(expand = c(0,0), limits = c(0, 115)) +
   theme_bw() +
   theme(legend.position = "inside", legend.position.inside = c(0.1, 0.9), axis.text.x = element_blank(),
@@ -142,7 +142,7 @@ B <- ggplot() +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   #annotate("text", x = 4.9, y = "fire", label = "***", size = 14) +
   annotate("text", x = 4.9, y = "fire", label = "*", size = 14) +
-  scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
+  scale_color_manual(values = c(red, blue, yellow)) +
   ggtitle("Temperate Conifer Forests") +
   xlim(-1.2, 5) +
   theme_bw() +
@@ -178,7 +178,7 @@ C <- ggplot() +
   geom_jitter(data = data[data$Olson_Biome == "Temperate Broadleaf and Mixed Forests" & data$carbon_vs_mortality == 1,], aes(x = lrr, y = disturbance_type, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
   geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
-  scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
+  scale_color_manual(values = c(red, blue, yellow)) +
   ggtitle("Temperate Broadleaf and Mixed Forests") +
   xlim(-1.2, 5) +
   theme_bw() +
@@ -212,7 +212,7 @@ D <- ggplot() +
   geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   annotate("text", x = 4.9, y = "drought", label = "*", size = 14) +
-  scale_color_manual(values = c("#377eb8")) +
+  scale_color_manual(values = c(blue)) +
   xlim(-1.2, 5) +
   ggtitle("Mediterranean Forests, Woodlands and Scrub") +
   theme_bw() +
@@ -249,7 +249,7 @@ E <- ggplot() +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   annotate("text", x = 4.9, y = "fire", label = "*", size = 14) +
   annotate("text", x = 4.9, y = "insect", label = "*", size = 14) +
-  scale_color_manual(values = c("#e41a1c", "#4daf4a")) +
+  scale_color_manual(values = c(red, yellow)) +
   xlim(-1.2, 5) +
   ggtitle("Deserts and Xeric Shrublands") +
   theme_bw() +

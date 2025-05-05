@@ -96,7 +96,7 @@ A <- ggplot(data[data$carbon_vs_mortality == 2, ]) +
   annotate("text", x = "Temperate Broadleaf and Mixed Forests", y = 17, label = "Temperate Broadleaf \n and Mixed Forests", size = 4) +
   annotate("text", x = "Temperate Conifer Forests", y = 105, label = "Temperate Conifer \n Forests", size = 4) +
   ggtitle("Biome Effects: Survivorship") +
-  scale_fill_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
+  scale_fill_manual(values = c(red, yellow, blue)) +
   scale_y_continuous(expand = c(0,0), limits = c(0, 110)) +
   theme_bw() +
   theme(legend.position = "inside", legend.position.inside = c(0.1, 0.9), axis.text.x = element_blank(),
@@ -135,7 +135,7 @@ B <- ggplot() +
   geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   annotate("text", x = 4.9, y = "fire", label = "*", size = 14) +
-  scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
+  scale_color_manual(values = c(red, blue, yellow)) +
   ggtitle("Temperate Conifer Forests") +
   xlim(-1.2, 5) +
   theme_bw() +
@@ -170,7 +170,7 @@ C <- ggplot() +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   #annotate("text", x = 4.9, y = "insect", label = "***", size = 14) +
   #annotate("text", x = 4.9, y = "drought", label = "***", size = 14) +
-  scale_color_manual(values = c("#377eb8", "#4daf4a")) +
+  scale_color_manual(values = c(blue, yellow)) +
   ggtitle("Temperate Broadleaf and Mixed Forests") +
   xlim(-1.2, 5) +
   theme_bw() +
@@ -204,7 +204,7 @@ D <- ggplot() +
   geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   annotate("text", x = 4.9, y = "fire", label = "*", size = 14) +
-  scale_color_manual(values = c("#e41a1c", "#377eb8")) +
+  scale_color_manual(values = c(red, blue)) +
   xlim(-1.2, 5) +
   ggtitle("Mediterranean Forests, Woodlands and Scrub") +
   theme_bw() +
