@@ -28,7 +28,7 @@ pool_mort
 
 ## assess publication bias for each MICE thing separately
 bias_tests <- lapply(mort_fit$analyses, function(mod) {
-  regtest(mod, model = "lm")
+  regtest(mod, model = "rma", predictor = "sei")
 })
 
 pvals <- sapply(bias_tests, function(x) if (!is.null(x)) x$pval else NA)
@@ -55,8 +55,9 @@ ggsave("figures/publication_bias_mortality.png", width = 12, height = 8)
 
 out <- list()
 for(i in 1:length(mort_fit$analyses)){
-  temp <- rstandard(mort_fit$analyses[[i]])
-  temp <- data.frame(resid = temp$resid, se = temp$se)
+  resid <- rstandard(mort_fit$analyses[[i]])$resid
+  se <- sqrt(mort_fit$analyses[[i]]$vi)
+  temp <- data.frame(resid = resid, se = se)
   temp$rownr <- 1:nrow(temp)
   out[[i]] <- temp ; rm(temp)
 }
@@ -73,7 +74,7 @@ mort_data$cls2 <- "#e41a1c"
 mort_data$cls2[mort_data$disturbance_type == "drought"] <- "#377eb8"
 mort_data$cls2[mort_data$disturbance_type == "insect"] <- "#4daf4a"
 
-regtest(mort_data$resid, sei = mort_data$se, model = "lm")
+regtest(mort_data$resid, sei = mort_data$se, model = "rma")
 
 cx <- 1.5
 png("figures/publication_bias_funnel_mortality_impute.png", width = 12, height = 8, units = "in", res = 72)
@@ -102,7 +103,7 @@ pool_carbon
 
 ## assess publication bias for each MICE thing separately
 bias_tests <- lapply(carbon_fit$analyses, function(mod) {
-  regtest(mod, model = "lm")
+  regtest(mod, model = "rma")
 })
 
 pvals <- sapply(bias_tests, function(x) if (!is.null(x)) x$pval else NA)
@@ -129,8 +130,9 @@ ggsave("figures/publication_bias_carbon.png", width = 12, height = 8)
 
 out <- list()
 for(i in 1:length(carbon_fit$analyses)){
-  temp <- rstandard(carbon_fit$analyses[[i]])
-  temp <- data.frame(resid = temp$resid, se = temp$se)
+  resid <- rstandard(carbon_fit$analyses[[i]])$resid
+  se <- sqrt(carbon_fit$analyses[[i]]$vi)
+  temp <- data.frame(resid = resid, se = se)
   temp$rownr <- 1:nrow(temp)
   out[[i]] <- temp ; rm(temp)
 }
@@ -147,7 +149,7 @@ carbon_data$cls2 <- "#e41a1c"
 carbon_data$cls2[carbon_data$disturbance_type == "drought"] <- "#377eb8"
 carbon_data$cls2[carbon_data$disturbance_type == "insect"] <- "#4daf4a"
 
-regtest(carbon_data$resid, sei = carbon_data$se, model = "lm")
+regtest(carbon_data$resid, sei = carbon_data$se, model = "rma")
 
 cx <- 1.5
 png("figures/publication_bias_funnel_carbon_impute.png", width = 12, height = 8, units = "in", res = 72)
