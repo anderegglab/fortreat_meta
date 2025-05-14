@@ -15,8 +15,36 @@ library("mice")
 library("brms")
 library("ggplot2")
 library("patchwork")
+library("mitools")
 
 source("code/00_functions.r")
+
+
+compute_cis <- function(models) {
+
+  model_list <- models$analyses
+  coefs <- lapply(model_list, coef)
+  vcovs <- lapply(model_list, vcov)
+
+  # Combine with mitools
+  pooled <- MIcombine(results = coefs, variances = vcovs)
+
+  estimates <- pooled$coefficients
+  vcov_matrix <- pooled$variance
+  se <- sqrt(diag(vcov_matrix))
+  df <- pooled$df
+
+  ci_lower <- estimates - qt(0.975, df) * se
+  ci_upper <- estimates + qt(0.975, df) * se
+
+  ci_table <- data.frame(Estimate = round(estimates, 4),
+                         SE = round(se, 4),
+                         CI_lower = round(ci_lower, 4),
+                         CI_upper = round(ci_upper, 4))
+
+  return(ci_table)
+
+}
 
 ## read data
 data <- read.csv("data/processed_data/data_cleaned.csv")
@@ -61,6 +89,8 @@ mort_fit <- with(mort_cwd_imputed,
 pool_mort <- summary(pool(mort_fit))
 pool_mort[-1] <- round(pool_mort[-1], digits = 4)
 pool_mort
+
+compute_cis(mort_fit)
 
 table_gen(pool_mort, "cwd_mort.csv")
 
@@ -165,6 +195,8 @@ carbon_fit <- with(carbon_sev_imputed,
 pool_carbon <- summary(pool(carbon_fit))
 pool_carbon[-1] <- round(pool_carbon[-1], digits = 4)
 pool_carbon
+
+compute_cis(carbon_fit)
 
 table_gen(pool_carbon, "cwd_carbon.csv")
 
@@ -305,6 +337,8 @@ pool_mort <- summary(pool(mort_fit))
 pool_mort[-1] <- round(pool_mort[-1], digits = 4)
 pool_mort
 
+compute_cis(mort_fit)
+
 table_gen(pool_mort, "mat_mort.csv")
 
 ## mortality
@@ -406,6 +440,8 @@ carbon_fit <- with(carbon_sev_imputed,
 pool_carbon <- summary(pool(carbon_fit))
 pool_carbon[-1] <- round(pool_carbon[-1], digits = 4)
 pool_carbon
+
+compute_cis(carbon_fit)
 
 table_gen(pool_carbon, "mat_carbon.csv")
 
@@ -546,6 +582,8 @@ pool_mort <- summary(pool(mort_fit))
 pool_mort[-1] <- round(pool_mort[-1], digits = 4)
 pool_mort
 
+compute_cis(mort_fit)
+
 table_gen(pool_mort, "map_mort.csv")
 
 ## mortality
@@ -647,6 +685,8 @@ carbon_fit <- with(carbon_sev_imputed,
 pool_carbon <- summary(pool(carbon_fit))
 pool_carbon[-1] <- round(pool_carbon[-1], digits = 4)
 pool_carbon
+
+compute_cis(carbon_fit)
 
 table_gen(pool_carbon, "map_carbon.csv")
 
@@ -787,6 +827,8 @@ pool_mort <- summary(pool(mort_fit))
 pool_mort[-1] <- round(pool_mort[-1], digits = 4)
 pool_mort
 
+compute_cis(mort_fit)
+
 table_gen(pool_mort, "vpd_mort.csv")
 
 ## mortality
@@ -889,6 +931,8 @@ carbon_fit <- with(carbon_sev_imputed,
 pool_carbon <- summary(pool(carbon_fit))
 pool_carbon[-1] <- round(pool_carbon[-1], digits = 4)
 pool_carbon
+
+compute_cis(carbon_fit)
 
 table_gen(pool_carbon, "vpd_carbon.csv")
 
