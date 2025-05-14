@@ -95,19 +95,6 @@ pdata$upper <- rowMeans(out[[3]])
 
 pdata$cwd <- pdata$cwd * sd(data$cwd) + mean(data$cwd)
 
-p <- ggplot() +
-  geom_hline(yintercept = 0, color = "black", size = 2) +
-  geom_ribbon(data = pdata, aes(x = cwd, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
-  geom_line(data = pdata, aes(x = cwd, y = mean, color = disturbance_type), size = 3) +
-  geom_point(data = data[data$carbon_vs_mortality == 2,], aes(x = cwd, y = lrr, color = disturbance_type), size = 5) +
-  scale_x_continuous(limits = c(min(pdata$cwd), max(pdata$cwd)), expand = c(0,0)) +
-  scale_color_manual(values = c(red, blue, yellow)) +
-  scale_fill_manual(values = c(red, blue, yellow)) +
-  theme_bw() +
-  theme(legend.position = "none", axis.title = element_blank(),
-        panel.grid = element_blank())
-p
-
 
 p1 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
@@ -164,8 +151,8 @@ p1 + p2 + p3 +
   plot_layout(
   design = "ABC")
 
-ggsave("figures/figure7A.png", width = 10, height = 4)
-ggsave("figures/illustrator/figure7A.pdf", width = 10, height = 4)
+#ggsave("figures/figure7A.png", width = 10, height = 4)
+#ggsave("figures/illustrator/figure7A.pdf", width = 10, height = 4)
 
 ## Carbon
 carbon_sev_imputed <- impute_data(data[data$carbon_vs_mortality == 1,], m = 100)
@@ -212,7 +199,7 @@ pdata$upper <- rowMeans(out[[3]])
 
 pdata$cwd <- pdata$cwd * sd(data$cwd) + mean(data$cwd)
 
-p1 <- ggplot() +
+p4 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
   geom_ribbon(data = pdata[pdata$disturbance_type == "fire",], aes(x = cwd, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
   geom_line(data = pdata[pdata$disturbance_type == "fire",], aes(x = cwd, y = mean, color = disturbance_type), size = 3) +
@@ -227,9 +214,9 @@ p1 <- ggplot() +
   theme(legend.position = "none", axis.title.x = element_blank(), axis.title.y = element_text(size = 16),
         plot.title = element_text(face = "bold", size = 18),
         panel.grid = element_blank())
-p1
+p4
 
-p2 <- ggplot() +
+p5 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
   geom_ribbon(data = pdata[pdata$disturbance_type == "drought",], aes(x = cwd, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
   geom_line(data = pdata[pdata$disturbance_type == "drought",], aes(x = cwd, y = mean, color = disturbance_type), size = 3) +
@@ -244,9 +231,9 @@ p2 <- ggplot() +
   theme(legend.position = "none", axis.title.x = element_text(size = 16), axis.title.y = element_blank(),
         plot.title = element_text(face = "bold", size = 18),
         panel.grid = element_blank())
-p2
+p5
 
-p3 <- ggplot() +
+p6 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
   geom_ribbon(data = pdata[pdata$disturbance_type == "insect",], aes(x = cwd, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
   geom_line(data = pdata[pdata$disturbance_type == "insect",], aes(x = cwd, y = mean, color = disturbance_type), size = 3) +
@@ -261,15 +248,21 @@ p3 <- ggplot() +
   theme(legend.position = "none", axis.title = element_blank(),
         plot.title = element_text(face = "bold", size = 18),
         panel.grid = element_blank())
-p3
+p6
 
-
-p1 + p2 + p3 +
+p4 + p5 + p6 +
   plot_layout(
   design = "ABC")
 
-ggsave("figures/figure7B.png", width = 10, height = 4)
-ggsave("figures/illustrator/figure7B.pdf", width = 10, height = 4)
+p1 + p2 + p3 + p4 + p5 + p6 +
+  plot_layout(
+  design = "ABC
+  DEF")
+
+#ggsave("figures/figure7B.png", width = 10, height = 4)
+#ggsave("figures/illustrator/figure7B.pdf", width = 10, height = 4)
+
+ggsave("figures/illustrator/figure7A.pdf", width = 10, height = 8)
 
 ##---------------------------------------------------------------
 ## TEMP
@@ -399,8 +392,8 @@ p1 + p2 + p3 +
   plot_layout(
   design = "ABC")
 
-ggsave("figures/figure7C.png", width = 10, height = 4)
-ggsave("figures/illustrator/figure7C.pdf", width = 10, height = 4)
+#ggsave("figures/figure7C.png", width = 10, height = 4)
+#ggsave("figures/illustrator/figure7C.pdf", width = 10, height = 4)
 
 # Carbon
 carbon_sev_imputed <- impute_data(data[data$carbon_vs_mortality == 1,], m = 100)
@@ -447,13 +440,13 @@ pdata$upper <- rowMeans(out[[3]])
 
 pdata$mat <- pdata$mat * sd(data$mat) + mean(data$mat)
 
-p1 <- ggplot() +
+p4 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
   geom_ribbon(data = pdata[pdata$disturbance_type == "fire",], aes(x = mat, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
   geom_line(data = pdata[pdata$disturbance_type == "fire",], aes(x = mat, y = mean, color = disturbance_type), size = 3) +
   geom_point(data = data[data$disturbance_type == "fire" & data$carbon_vs_mortality == 1,], aes(x = mat, y = lrr, color = disturbance_type), size = 5) +
   scale_x_continuous(limits = c(min(pdata$mat), max(pdata$mat)), expand = c(0,0)) +
-  scale_y_continuous(limits = c(-5,3.1), expand = c(0,0)) +
+  scale_y_continuous(limits = c(-4,3.1), expand = c(0,0)) +
   annotate("text", y = 2.5, x = 18, label = "*", size = 15) +
   ylab("Log Response Ratio") +
   ggtitle("Fire") +
@@ -463,9 +456,9 @@ p1 <- ggplot() +
   theme(legend.position = "none", axis.title.x = element_blank(), axis.title.y = element_text(size = 16),
         plot.title = element_text(face = "bold", size = 18),
         panel.grid = element_blank())
-p1
+p4
 
-p2 <- ggplot() +
+p5 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
   geom_ribbon(data = pdata[pdata$disturbance_type == "drought",], aes(x = mat, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
   geom_line(data = pdata[pdata$disturbance_type == "drought",], aes(x = mat, y = mean, color = disturbance_type), size = 3) +
@@ -473,38 +466,44 @@ p2 <- ggplot() +
   ggtitle("Drought") +
   xlab("Mean Annual Temperature") +
   scale_x_continuous(limits = c(min(pdata$mat), max(pdata$mat)), expand = c(0,0)) +
-  scale_y_continuous(limits = c(-5, 3.1), expand = c(0,0)) +
+  scale_y_continuous(limits = c(-4, 3.1), expand = c(0,0)) +
   scale_color_manual(values = c(blue)) +
   scale_fill_manual(values = c(blue)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_text(size = 16), axis.title.y = element_blank(),
         plot.title = element_text(face = "bold", size = 18),
         panel.grid = element_blank())
-p2
+p5
 
-p3 <- ggplot() +
+p6 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
   geom_ribbon(data = pdata[pdata$disturbance_type == "insect",], aes(x = mat, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
   geom_line(data = pdata[pdata$disturbance_type == "insect",], aes(x = mat, y = mean, color = disturbance_type), size = 3) +
   geom_point(data = data[data$disturbance_type == "insect" & data$carbon_vs_mortality == 1,], aes(x = mat, y = lrr, color = disturbance_type), size = 5) +
   ggtitle("Insect") +
   scale_x_continuous(limits = c(min(pdata$mat), max(pdata$mat)), expand = c(0,0)) +
-  scale_y_continuous(limits = c(-5, 3.1), expand = c(0,0)) +
+  scale_y_continuous(limits = c(-4, 3.1), expand = c(0,0)) +
   scale_color_manual(values = c(yellow)) +
   scale_fill_manual(values = c(yellow)) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank(),
         plot.title = element_text(face = "bold", size = 18),
         panel.grid = element_blank())
-p3
+p6
 
-p1 + p2 + p3 +
+p4 + p5 + p6 +
   plot_layout(
-  design = "ABC")
+    design = "ABC")
 
-ggsave("figures/figure7D.png", width = 10, height = 4)
-ggsave("figures/illustrator/figure7D.pdf", width = 10, height = 4)
+p1 + p2 + p3 + p4 + p5 + p6 +
+  plot_layout(
+    design = "ABC
+  DEF")
 
+#ggsave("figures/figure7D.png", width = 10, height = 4)
+#ggsave("figures/illustrator/figure7D.pdf", width = 10, height = 4)
+
+ggsave("figures/illustrator/figure7B.pdf", width = 10, height = 8)
 
 ##---------------------------------------------------------------
 ## MAP
@@ -586,7 +585,7 @@ p1 <- ggplot() +
   geom_line(data = pdata[pdata$disturbance_type == "fire",], aes(x = map, y = mean, color = disturbance_type), size = 3) +
   geom_point(data = data[data$disturbance_type == "fire" & data$carbon_vs_mortality == 2,], aes(x = map, y = lrr, color = disturbance_type), size = 5) +
   scale_x_continuous(limits = c(min(pdata$map), max(pdata$map)), expand = c(0,0)) +
-  scale_y_continuous(limits = c(-3,5), expand = c(0,0)) +
+  scale_y_continuous(limits = c(-2,5), expand = c(0,0)) +
   ylab("Log Response Ratio") +
   ggtitle("Fire") +
   scale_color_manual(values = c(red)) +
@@ -605,7 +604,7 @@ p2 <- ggplot() +
   ggtitle("Drought") +
   xlab("Mean Annual Precipitation") +
   scale_x_continuous(limits = c(min(pdata$map), max(pdata$map)), expand = c(0,0)) +
-  scale_y_continuous(limits = c(-3, 5), expand = c(0,0)) +
+  scale_y_continuous(limits = c(-2, 5), expand = c(0,0)) +
   scale_color_manual(values = c(blue)) +
   scale_fill_manual(values = c(blue)) +
   theme_bw() +
@@ -621,7 +620,7 @@ p3 <- ggplot() +
   geom_point(data = data[data$disturbance_type == "insect" & data$carbon_vs_mortality == 2,], aes(x = map, y = lrr, color = disturbance_type), size = 5) +
   ggtitle("Insect") +
   scale_x_continuous(limits = c(min(pdata$map), max(pdata$map)), expand = c(0,0)) +
-  scale_y_continuous(limits = c(-3, 5), expand = c(0,0)) +
+  scale_y_continuous(limits = c(-2, 5), expand = c(0,0)) +
   scale_color_manual(values = c(yellow)) +
   scale_fill_manual(values = c(yellow)) +
   theme_bw() +
@@ -634,8 +633,8 @@ p1 + p2 + p3 +
   plot_layout(
   design = "ABC")
 
-ggsave("figures/figure7E.png", width = 10, height = 4)
-ggsave("figures/illustrator/figure7E.pdf", width = 10, height = 4)
+#ggsave("figures/figure7E.png", width = 10, height = 4)
+#ggsave("figures/illustrator/figure7E.pdf", width = 10, height = 4)
 
 ## Carbon
 carbon_sev_imputed <- impute_data(data[data$carbon_vs_mortality == 1,], m = 100)
@@ -682,13 +681,13 @@ pdata$upper <- rowMeans(out[[3]])
 
 pdata$map <- pdata$map * sd(data$map) + mean(data$map)
 
-p1 <- ggplot() +
+p4 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
   geom_ribbon(data = pdata[pdata$disturbance_type == "fire",], aes(x = map, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
   geom_line(data = pdata[pdata$disturbance_type == "fire",], aes(x = map, y = mean, color = disturbance_type), size = 3) +
   geom_point(data = data[data$disturbance_type == "fire" & data$carbon_vs_mortality == 1,], aes(x = map, y = lrr, color = disturbance_type), size = 5) +
   scale_x_continuous(limits = c(min(pdata$map), max(pdata$map)), expand = c(0,0)) +
-  scale_y_continuous(limits = c(-5,3), expand = c(0,0)) +
+  scale_y_continuous(limits = c(-3,3), expand = c(0,0)) +
   ylab("Log Response Ratio") +
   ggtitle("Fire") +
   scale_color_manual(values = c(red)) +
@@ -697,9 +696,9 @@ p1 <- ggplot() +
   theme(legend.position = "none", axis.title.x = element_blank(), axis.title.y = element_text(size = 16),
         plot.title = element_text(face = "bold", size = 18),
         panel.grid = element_blank())
-p1
+p4
 
-p2 <- ggplot() +
+p5 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
   geom_ribbon(data = pdata[pdata$disturbance_type == "drought",], aes(x = map, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
   geom_line(data = pdata[pdata$disturbance_type == "drought",], aes(x = map, y = mean, color = disturbance_type), size = 3) +
@@ -707,16 +706,16 @@ p2 <- ggplot() +
   ggtitle("Drought") +
   xlab("Mean Annual Precipitation") +
   scale_x_continuous(limits = c(min(pdata$map), max(pdata$map)), expand = c(0,0)) +
-  scale_y_continuous(limits = c(-5, 3), expand = c(0,0)) +
+  scale_y_continuous(limits = c(-3, 3), expand = c(0,0)) +
   scale_color_manual(values = c(blue)) +
   scale_fill_manual(values = c(blue)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_text(size = 16), axis.title.y = element_blank(),
         plot.title = element_text(face = "bold", size = 18),
         panel.grid = element_blank())
-p2
+p5
 
-p3 <- ggplot() +
+p6 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
   geom_ribbon(data = pdata[pdata$disturbance_type == "insect",], aes(x = map, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
   geom_line(data = pdata[pdata$disturbance_type == "insect",], aes(x = map, y = mean, color = disturbance_type), size = 3) +
@@ -724,22 +723,28 @@ p3 <- ggplot() +
   ggtitle("Insect") +
   #annotate("text", y = 2.5, x = 18, label = "*", size = 15) +
   scale_x_continuous(limits = c(min(pdata$map), max(pdata$map)), expand = c(0,0)) +
-  scale_y_continuous(limits = c(-5, 3), expand = c(0,0)) +
+  scale_y_continuous(limits = c(-3, 3), expand = c(0,0)) +
   scale_color_manual(values = c(yellow)) +
   scale_fill_manual(values = c(yellow)) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank(),
         plot.title = element_text(face = "bold", size = 18),
         panel.grid = element_blank())
-p3
+p6
 
-p1 + p2 + p3 +
+p4 + p5 + p6 +
   plot_layout(
-  design = "ABC")
+    design = "ABC")
 
-ggsave("figures/figure7F.png", width = 10, height = 4)
-ggsave("figures/illustrator/figure7F.pdf", width = 10, height = 4)
+p1 + p2 + p3 + p4 + p5 + p6 +
+  plot_layout(
+    design = "ABC
+  DEF")
 
+#ggsave("figures/figure7F.png", width = 10, height = 4)
+#ggsave("figures/illustrator/figure7F.pdf", width = 10, height = 4)
+
+ggsave("figures/illustrator/figure7C.pdf", width = 10, height = 8)
 
 ##---------------------------------------------------------------
 ## VPD
@@ -822,7 +827,7 @@ p1 <- ggplot() +
   geom_line(data = pdata[pdata$disturbance_type == "fire",], aes(x = vpd, y = mean, color = disturbance_type), size = 3) +
   geom_point(data = data[data$disturbance_type == "fire" & data$carbon_vs_mortality == 2,], aes(x = vpd, y = lrr, color = disturbance_type), size = 5) +
   scale_x_continuous(limits = c(min(pdata$vpd), max(pdata$vpd)), expand = c(0,0)) +
-  scale_y_continuous(limits = c(-3,5), expand = c(0,0)) +
+  scale_y_continuous(limits = c(-1,5), expand = c(0,0)) +
   ylab("Log Response Ratio") +
   ggtitle("Fire") +
   scale_color_manual(values = c(red)) +
@@ -841,7 +846,7 @@ p2 <- ggplot() +
   ggtitle("Drought") +
   xlab("Vapor Pressure Deficit") +
   scale_x_continuous(limits = c(min(pdata$vpd), max(pdata$vpd)), expand = c(0,0)) +
-  scale_y_continuous(limits = c(-3, 5), expand = c(0,0)) +
+  scale_y_continuous(limits = c(-1, 5), expand = c(0,0)) +
   scale_color_manual(values = c(blue)) +
   scale_fill_manual(values = c(blue)) +
   theme_bw() +
@@ -857,7 +862,7 @@ p3 <- ggplot() +
   geom_point(data = data[data$disturbance_type == "insect" & data$carbon_vs_mortality == 2,], aes(x = vpd, y = lrr, color = disturbance_type), size = 5) +
   ggtitle("Insect") +
   scale_x_continuous(limits = c(min(pdata$vpd), max(pdata$vpd)), expand = c(0,0)) +
-  scale_y_continuous(limits = c(-3, 5), expand = c(0,0)) +
+  scale_y_continuous(limits = c(-1, 5), expand = c(0,0)) +
   scale_color_manual(values = c(yellow)) +
   scale_fill_manual(values = c(yellow)) +
   theme_bw() +
@@ -870,8 +875,8 @@ p1 + p2 + p3 +
   plot_layout(
   design = "ABC")
 
-ggsave("figures/figure7G.png", width = 10, height = 4)
-ggsave("figures/illustrator/figure7G.pdf", width = 10, height = 4)
+#ggsave("figures/figure7G.png", width = 10, height = 4)
+#ggsave("figures/illustrator/figure7G.pdf", width = 10, height = 4)
 
 ## Carbon
 carbon_sev_imputed <- impute_data(data[data$carbon_vs_mortality == 1,], m = 100)
@@ -918,13 +923,13 @@ pdata$upper <- rowMeans(out[[3]])
 
 pdata$vpd <- pdata$vpd * sd(data$vpd) + mean(data$vpd)
 
-p1 <- ggplot() +
+p4 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
   geom_ribbon(data = pdata[pdata$disturbance_type == "fire",], aes(x = vpd, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
   geom_line(data = pdata[pdata$disturbance_type == "fire",], aes(x = vpd, y = mean, color = disturbance_type), size = 3) +
   geom_point(data = data[data$disturbance_type == "fire" & data$carbon_vs_mortality == 1,], aes(x = vpd, y = lrr, color = disturbance_type), size = 5) +
   scale_x_continuous(limits = c(min(pdata$vpd), max(pdata$vpd)), expand = c(0,0)) +
-  scale_y_continuous(limits = c(-5,3), expand = c(0,0)) +
+  scale_y_continuous(limits = c(-4,3), expand = c(0,0)) +
   annotate("text", y = 2.5, x = 0.4, label = "*", size = 15) +
   ylab("Log Response Ratio") +
   ggtitle("Fire") +
@@ -934,9 +939,9 @@ p1 <- ggplot() +
   theme(legend.position = "none", axis.title.x = element_blank(), axis.title.y = element_text(size = 16),
         plot.title = element_text(face = "bold", size = 18),
         panel.grid = element_blank())
-p1
+p4
 
-p2 <- ggplot() +
+p5 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
   geom_ribbon(data = pdata[pdata$disturbance_type == "drought",], aes(x = vpd, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
   geom_line(data = pdata[pdata$disturbance_type == "drought",], aes(x = vpd, y = mean, color = disturbance_type), size = 3) +
@@ -944,16 +949,16 @@ p2 <- ggplot() +
   ggtitle("Drought") +
   xlab("Vapor Pressure Deficit") +
   scale_x_continuous(limits = c(min(pdata$vpd), max(pdata$vpd)), expand = c(0,0)) +
-  scale_y_continuous(limits = c(-5, 3), expand = c(0,0)) +
+  scale_y_continuous(limits = c(-4, 3), expand = c(0,0)) +
   scale_color_manual(values = c(blue)) +
   scale_fill_manual(values = c(blue)) +
   theme_bw() +
   theme(legend.position = "none", axis.title.x = element_text(size = 16), axis.title.y = element_blank(),
         plot.title = element_text(face = "bold", size = 18),
         panel.grid = element_blank())
-p2
+p5
 
-p3 <- ggplot() +
+p6 <- ggplot() +
   geom_hline(yintercept = 0, color = "black", size = 2) +
   geom_ribbon(data = pdata[pdata$disturbance_type == "insect",], aes(x = vpd, ymin = lower, ymax = upper, fill = disturbance_type), alpha = 0.3) +
   geom_line(data = pdata[pdata$disturbance_type == "insect",], aes(x = vpd, y = mean, color = disturbance_type), size = 3) +
@@ -961,18 +966,25 @@ p3 <- ggplot() +
   ggtitle("Insect") +
   #annotate("text", y = 2.5, x = 0.4, label = "*", size = 15) +
   scale_x_continuous(limits = c(min(pdata$vpd), max(pdata$vpd)), expand = c(0,0)) +
-  scale_y_continuous(limits = c(-5, 3), expand = c(0,0)) +
+  scale_y_continuous(limits = c(-4, 3), expand = c(0,0)) +
   scale_color_manual(values = c(yellow)) +
   scale_fill_manual(values = c(yellow)) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank(),
         plot.title = element_text(face = "bold", size = 18),
         panel.grid = element_blank())
-p3
+p6
 
-p1 + p2 + p3 +
+p4 + p5 + p6 +
   plot_layout(
-  design = "ABC")
+    design = "ABC")
 
-ggsave("figures/figure7H.png", width = 10, height = 4)
-ggsave("figures/illustrator/figure7H.pdf", width = 10, height = 4)
+p1 + p2 + p3 + p4 + p5 + p6 +
+  plot_layout(
+    design = "ABC
+  DEF")
+
+#ggsave("figures/figure7H.png", width = 10, height = 4)
+#ggsave("figures/illustrator/figure7H.pdf", width = 10, height = 4)
+
+ggsave("figures/illustrator/figure7D.pdf", width = 10, height = 8)
