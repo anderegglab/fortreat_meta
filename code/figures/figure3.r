@@ -209,6 +209,7 @@ D <- ggplot() +
   geom_jitter(data = data[data$disturbance_type == "insect" & data$carbon_vs_mortality == 1,], aes(x = lrr, y = trt_class, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
   geom_point(data = pdata, aes(x = mean, y = trt_class, color = disturbance_type), size = 6) +
   geom_linerange(data = pdata, aes(y = trt_class, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
+  annotate("text", y = "both", x = 4.6, label = "", size = 15) + # Weird but makes the xaxis be in the right order
   scale_color_manual(values = c(yellow)) +
   xlim(-1.5, 5) +
   theme_bw() +

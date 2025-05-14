@@ -107,7 +107,7 @@ A
 ## 3. Effect Plots
 ##---------------------------------------------------------------
 
-## mortality
+## Temperate Conifer Forests
 pd <- data.frame(disturbance_typefire = c(1, 0, 0),
            disturbance_typedrought = c(0, 1, 0),
            disturbance_typeinsect = c(0, 0, 1))
@@ -142,7 +142,7 @@ B <- ggplot() +
   theme(legend.position = "none", axis.title = element_blank())
 B
 
-## mortality
+## Temperate Broadleaf and Mixed Forests
 pd <- data.frame(disturbance_typedrought = c(1, 0),
                  disturbance_typeinsect = c(0, 1))
 
@@ -177,7 +177,7 @@ C <- ggplot() +
   theme(legend.position = "none", axis.title = element_blank())
 C
 
-## mortality
+## Mediterranean Forests, Woodlands and Scrub
 pd <- data.frame(disturbance_typedrought = c(1, 0),
                  disturbance_typefire = c(0, 1))
 
