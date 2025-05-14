@@ -107,13 +107,13 @@ A <- ggplot(data[data$carbon_vs_mortality == 1, ]) +
   annotate("text", x = "Temperate Conifer Forests", y = 42, label = "Temperate Conifer \n Forests", size = 5) +
   ggtitle("Biome Effects: Carbon") +
   scale_fill_manual(values = c(red, blue, yellow)) +
-  scale_y_continuous(expand = c(0,0), limits = c(0, 115)) +
+  scale_y_continuous(expand = c(0,0), limits = c(0, 110)) +
   theme_bw() +
   theme(legend.position = "inside", legend.position.inside = c(0.1, 0.9), axis.text.x = element_blank(),
         plot.title = element_text(face = "bold", size = 18))
 A
 
-## mortality
+## Temperate conifers
 pd <- data.frame(disturbance_typefire = c(1, 0, 0),
            disturbance_typedrought = c(0, 1, 0),
            disturbance_typeinsect = c(0, 0, 1))
@@ -140,37 +140,39 @@ B <- ggplot() +
   geom_jitter(data = data[data$Olson_Biome == "Temperate Conifer Forests" & data$carbon_vs_mortality == 1,], aes(x = lrr, y = disturbance_type, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
   geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
-  #annotate("text", x = 4.9, y = "fire", label = "***", size = 14) +
+  annotate("text", x = 4.9, y = "drought", label = "*", size = 14) +
   annotate("text", x = 4.9, y = "fire", label = "*", size = 14) +
   scale_color_manual(values = c(red, blue, yellow)) +
   ggtitle("Temperate Conifer Forests") +
-  xlim(-1.2, 5) +
+  xlim(-1.4, 5) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank())
 B
 
 
 
-## mortality
-pd <- data.frame(disturbance_typedrought = c(1, 0),
-                 disturbance_typefire = c(0, 1))
+## Temperate broadleaved 
+pd <- data.frame(disturbance_typefire = c(1, 0, 0),
+                 disturbance_typedrought = c(0, 1, 0),
+                 disturbance_typeinsect = c(0, 0, 1))
 
-out <- list(mean = matrix(nrow = 2, ncol = 100), ci.lb = matrix(nrow = 2, ncol = 100), ci.ub = matrix(nrow = 2, ncol = 100))
+out <- list(mean = matrix(nrow = 3, ncol = 100), ci.lb = matrix(nrow = 3, ncol = 100), ci.ub = matrix(nrow = 3, ncol = 100))
 
 for (i in 1:100) {
-
+  
   p <- predict.rma(carbon_fit_tbro$analyses[[i]], newmods = as.matrix(pd))
   out[[1]][,i] <- p[[1]]
   out[[2]][,i] <- p[[3]]
   out[[3]][,i] <- p[[4]]
-
+  
 }
 
-pdata <- data.frame(disturbance_type = factor(c("drought", "fire"), levels = c("fire", "drought", "insect")))
+pdata <- data.frame(disturbance_type = factor(c("fire", "drought", "insect"), levels = c("fire", "drought", "insect")))
 
 pdata$mean <- rowMeans(out[[1]])
 pdata$lower <- rowMeans(out[[2]])
 pdata$upper <- rowMeans(out[[3]])
+
 
 
 C <- ggplot() +
@@ -180,13 +182,13 @@ C <- ggplot() +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   scale_color_manual(values = c(red, blue, yellow)) +
   ggtitle("Temperate Broadleaf and Mixed Forests") +
-  xlim(-1.2, 5) +
+  xlim(-1.4, 5) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank())
 C
 
 
-## mortality
+## Mediterranean
 pd <- data.frame(disturbance_typedrought = c(1))
 
 out <- list(mean = matrix(nrow = 1, ncol = 100), ci.lb = matrix(nrow = 1, ncol = 100), ci.ub = matrix(nrow = 1, ncol = 100))
@@ -213,29 +215,28 @@ D <- ggplot() +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   annotate("text", x = 4.9, y = "drought", label = "*", size = 14) +
   scale_color_manual(values = c(blue)) +
-  xlim(-1.2, 5) +
+  xlim(-1.4, 5) +
   ggtitle("Mediterranean Forests, Woodlands and Scrub") +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank())
 D
 
 
-## mortality
-pd <- data.frame(disturbance_typeinsect = c(1, 0),
-                 disturbance_typefire = c(0, 1))
+## Desert
+pd <- data.frame(disturbance_typefire = c(1))
 
-out <- list(mean = matrix(nrow = 2, ncol = 100), ci.lb = matrix(nrow = 2, ncol = 100), ci.ub = matrix(nrow = 2, ncol = 100))
+out <- list(mean = matrix(nrow = 1, ncol = 100), ci.lb = matrix(nrow = 1, ncol = 100), ci.ub = matrix(nrow = 1, ncol = 100))
 
 for (i in 1:100) {
-
-  p <- predict.rma(carbon_fit_des$analyses[[i]], newmods = as.matrix(pd))
+  
+  p <- predict.rma(carbon_fit_des$analyses[[i]])
   out[[1]][,i] <- p[[1]]
   out[[2]][,i] <- p[[3]]
   out[[3]][,i] <- p[[4]]
-
+  
 }
 
-pdata <- data.frame(disturbance_type = factor(c("insect", "fire"), levels = c("fire", "drought", "insect")))
+pdata <- data.frame(disturbance_type = factor(c("fire"), levels = c("fire", "drought", "insect")))
 
 pdata$mean <- rowMeans(out[[1]])
 pdata$lower <- rowMeans(out[[2]])
@@ -248,9 +249,8 @@ E <- ggplot() +
   geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
   annotate("text", x = 4.9, y = "fire", label = "*", size = 14) +
-  annotate("text", x = 4.9, y = "insect", label = "*", size = 14) +
   scale_color_manual(values = c(red, yellow)) +
-  xlim(-1.2, 5) +
+  xlim(-1.4, 5) +
   ggtitle("Deserts and Xeric Shrublands") +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank())

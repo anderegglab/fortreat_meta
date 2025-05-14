@@ -78,12 +78,12 @@ pdata$upper <- pdata$mean + 1.97*pdata$se
 A <- ggplot() +
   geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.8) +
   geom_jitter(data = data[data$carbon_vs_mortality == 2,], aes(x = lrr, y = disturbance_type, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
-  geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 12) +
+  geom_point(data = pdata, aes(x = mean, y = disturbance_type, color = disturbance_type), size = 8) +
   geom_linerange(data = pdata, aes(y = disturbance_type, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
-  scale_color_manual(values = c("#e41a1c", "#377eb8", "#4daf4a")) +
+  scale_color_manual(values = c(red, blue, yellow)) +
   scale_x_continuous(limits = c(-0.5, 5.5)) +
   ggtitle("Treatment Effects: Survivorship") +
-  annotate("text", y = "fire", x = 5, label = "*", size = 15, col = "black") +
+  annotate("text", y = "fire", x = 5, label = "*", size = 15) +
   xlab("Log Response Ratio") +
   theme_bw() +
   theme(legend.position = "none", axis.title.y = element_blank(), axis.title.x = element_text(size = 16),
@@ -169,17 +169,16 @@ pdata$upper <- pdata$mean + 1.97*pdata$se
 B <- ggplot() +
   geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.8) +
   geom_jitter(data = data[data$disturbance_type == "fire" & data$carbon_vs_mortality == 2,], aes(x = lrr, y = trt_class, color = disturbance_type), height = 0.2, size = 3, alpha = 0.5) +
-  geom_point(data = pdata, aes(x = mean, y = trt_class, color = disturbance_type), size = 8) +
+  geom_point(data = pdata, aes(x = mean, y = trt_class, color = disturbance_type), size = 6) +
   geom_linerange(data = pdata, aes(y = trt_class, xmin = lower, xmax = upper, color = disturbance_type), size = 3) +
-  scale_color_manual(values = c("#e41a1c")) +
-  annotate("text", y = "both", x = 4.8, label = "*", size = 15, col = "black") +
-  annotate("text", y = "thinning", x = 4.8, label = "*", size = 15, col = "black") +
+  scale_color_manual(values = c(red)) +
+  annotate("text", y = "both", x = 4.8, label = "*", size = 15) +
+  annotate("text", y = "thinning", x = 4.8, label = "*", size = 15) +
   xlab("Log Response Ratio") +
   xlim(-0.5, 5) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank(), axis.text.y = element_text(face = "italic", size = 12), axis.title.x = element_text(size = 16),)
 B
-
 
 pdata <- data.frame(trt_class = factor(c("thinning", "rx_fire", "both"), levels = c("thinning", "rx_fire", "both")))
 pdata$disturbance_type = "drought"
@@ -193,10 +192,10 @@ pdata$upper <- pdata$mean + 1.97*pdata$se
 C <- ggplot() +
   geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.8) +
   geom_jitter(data = data[data$disturbance_type == "drought" & data$carbon_vs_mortality == 2,], aes(x = lrr, y = trt_class, color = trt_class), height = 0.2, size = 3, alpha = 0.5) +
-  geom_point(data = pdata, aes(x = mean, y = trt_class, color = trt_class), size = 8) +
+  geom_point(data = pdata, aes(x = mean, y = trt_class, color = trt_class), size = 6) +
   geom_linerange(data = pdata, aes(y = trt_class, xmin = lower, xmax = upper, color = trt_class), size = 3) +
-  annotate("text", y = "both", x = 4.8, label = "", size = 15, col = "grey") +
-  scale_color_manual(values = c("#377eb8", "grey", "grey")) +
+  annotate("text", y = "thinning", x = 4.8, label = "*", size = 15, col = "white") +
+  scale_color_manual(values = c(blue, "grey", "grey")) +
   xlim(-0.5, 5) +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank(), axis.text.y = element_text(face = "italic", size = 12))
@@ -214,10 +213,10 @@ pdata$upper <- pdata$mean + 1.97*pdata$se
 D <- ggplot() +
   geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.8) +
   geom_jitter(data = data[data$disturbance_type == "insect" & data$carbon_vs_mortality == 2,], aes(x = lrr, y = trt_class, color = trt_class), height = 0.2, size = 3, alpha = 0.5) +
-  geom_point(data = pdata, aes(x = mean, y = trt_class, color = trt_class), size = 8) +
+  geom_point(data = pdata, aes(x = mean, y = trt_class, color = trt_class), size = 6) +
   geom_linerange(data = pdata, aes(y = trt_class, xmin = lower, xmax = upper, color = trt_class), size = 3) +
   annotate("text", y = "thinning", x = 4.8, label = "*", size = 15) +
-  scale_color_manual(values = c("#4daf4a", "#4daf4a", "grey")) +
+  scale_color_manual(values = c(yellow, yellow, "grey")) +
   xlim(-0.5, 5) +
   theme_bw() +
   theme(legend.position = "none", axis.title.y = element_blank(), axis.text.y = element_text(face = "italic", size = 12))
@@ -231,7 +230,8 @@ AB
 AC
 AE")
 
-ggsave("figures/sensitivity/sensitivity_figure2.png", width = 14, height = 12)
+ggsave("figures/sensitivity/sensitivity_figure2.png", width = 8, height = 8)
+ggsave("figures/illustrator/sensitivity_figure2.pdf", width = 8, height = 8)
 
 
 ## --------------------------------------------------------------
