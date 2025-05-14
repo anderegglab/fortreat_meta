@@ -61,7 +61,8 @@ data$resid <- temp$mres
 ## Funnel plot
 cx <- 1
 
-png("figures/funnel_mortality.png", width = 7, height = 6, units = "in", res = 72)
+#png("figures/funnel_mortality.png", width = 7, height = 6, units = "in", res = 72)
+pdf("figures/funnel_mortality.pdf", width = 7, height = 6)
 funnel(data$lrr, sei = data$se, col = data$cls, pch = data$pchs, cex.lab = cx, cex = cx, cex.axis = cx, xlab = "LRR", main = "Survivorship")
 legend("topleft", col = c("#ff3319", "#0057ba", "#ffab00", "black", "black"), pch = c(rep(16,4),17), cex  = cx, legend = c("Fire", "Drought", "Insects", "Measured SE", "Imputed SE"))
 text(2, 0.1, "Egger's test for asymmetry:", adj = c(0,0), cex = cx)
@@ -70,15 +71,15 @@ box()
 dev.off()
 
 ## Test average residuals instead:
-regtest(data$resid, sei = data$se, model = "rma")
+#regtest(data$resid, sei = data$se, model = "rma")
 
-png("figures/funnel_mortality_resid.png", width = 7, height = 6, units = "in", res = 72)
-funnel(data$resid, sei = data$se, col = data$cls, pch = data$pchs, cex.lab = cx, cex = cx, cex.axis = cx, xlab = "Residuals", main = "Survivorship")
-legend("topleft", col = c("#ff3319", "#0057ba", "#ffab00", "black", "black"), pch = c(rep(16,4),17), cex  = cx, legend = c("Fire", "Drought", "Insects", "Measured SE", "Imputed SE"))
-text(1, 0.1, "Egger's test for asymmetry:", adj = c(0,0), cex = cx)
-text(1, 0.2, "z = 3.94, p < 0.001", adj = c(0,0), cex = cx)
-box()
-dev.off()
+#png("figures/funnel_mortality_resid.png", width = 7, height = 6, units = "in", res = 72)
+#funnel(data$resid, sei = data$se, col = data$cls, pch = data$pchs, cex.lab = cx, cex = cx, cex.axis = cx, xlab = "Residuals", main = "Survivorship")
+#legend("topleft", col = c("#ff3319", "#0057ba", "#ffab00", "black", "black"), pch = c(rep(16,4),17), cex  = cx, legend = c("Fire", "Drought", "Insects", "Measured SE", "Imputed SE"))
+#text(1, 0.1, "Egger's test for asymmetry:", adj = c(0,0), cex = cx)
+#text(1, 0.2, "z = 3.94, p < 0.001", adj = c(0,0), cex = cx)
+#box()
+#dev.off()
 
 ##---------------------------------------------------------------
 ## Reanalyse without North & Hurteau (studyID = 7)
@@ -246,7 +247,8 @@ data$resid <- temp$mres
 ## Funnel plot
 cx <- 1
 
-png("figures/funnel_mortality_without7.png", width = 7, height = 6, units = "in", res = 72)
+#png("figures/funnel_mortality_without7.png", width = 7, height = 6, units = "in", res = 72)
+pdf("figures/funnel_mortality_without7.pdf", width = 7, height = 6)
 funnel(data$lrr, sei = data$se, col = data$cls, pch = data$pchs, cex.lab = cx, cex = cx, cex.axis = cx, xlab = "LRR", main = "Survivorship")
 #legend("topleft", col = c("#ff3319", "#0057ba", "#ffab00", "black", "black"), pch = c(rep(16,4),17), cex  = cx, legend = c("Fire", "Drought", "Insects", "Measured SE", "Imputed SE"))
 text(1, 0.1, "Egger's test for asymmetry:", adj = c(0,0), cex = cx)
@@ -257,15 +259,15 @@ dev.off()
 #data[data$lrr > 2.5,]
 
 ## Test average residuals instead:
-regtest(data$resid, sei = data$se, model = "rma")
+#regtest(data$resid, sei = data$se, model = "rma")
 
-png("figures/funnel_mortality_resid_without7.png", width = 7, height = 6, units = "in", res = 72)
-funnel(data$resid, sei = data$se, col = data$cls, pch = data$pchs, cex.lab = cx, cex = cx, cex.axis = cx, xlab = "Residuals", main = "Survivorship")
+#png("figures/funnel_mortality_resid_without7.png", width = 7, height = 6, units = "in", res = 72)
+#funnel(data$resid, sei = data$se, col = data$cls, pch = data$pchs, cex.lab = cx, cex = cx, cex.axis = cx, xlab = "Residuals", main = "Survivorship")
 #legend("topleft", col = c("#ff3319", "#0057ba", "#ffab00", "black", "black"), pch = c(rep(16,4),17), cex  = cx, legend = c("Fire", "Drought", "Insects", "Measured SE", "Imputed SE"))
-text(1, 0.1, "Egger's test for asymmetry:", adj = c(0,0), cex = cx)
-text(1, 0.2, "z = 2.53, p = 0.011", adj = c(0,0), cex = cx)
-box()
-dev.off()
+#text(1, 0.1, "Egger's test for asymmetry:", adj = c(0,0), cex = cx)
+#text(1, 0.2, "z = 2.53, p = 0.011", adj = c(0,0), cex = cx)
+#box()
+#dev.off()
 
 #regtest(rstandard(mort_fit$analyses[[1]])[[1]], sei = sqrt(mort_fit$analyses[[1]]$vi), model = "rma")
 #funnel(rstandard(mort_fit$analyses[[1]])[[1]], sei = sqrt(mort_fit$analyses[[1]]$vi))
@@ -321,7 +323,8 @@ data$resid <- temp$mres
 ## Funnel plot
 cx <- 1
 
-png("figures/funnel_carbon.png", width = 7, height = 6, units = "in", res = 72)
+#png("figures/funnel_carbon.png", width = 7, height = 6, units = "in", res = 72)
+pdf("figures/funnel_carbon.pdf", width = 7, height = 6)
 funnel(data$lrr, sei = data$se, col = data$cls, pch = data$pchs, cex.lab = cx, cex = cx, cex.axis = cx, xlab = "LRR", main = "Carbon stocks")
 #legend("topleft", col = c("#ff3319", "#0057ba", "#ffab00", "black", "black"), pch = c(rep(16,4),17), cex  = cx, legend = c("Fire", "Drought", "Insects", "Measured SE", "Imputed SE"))
 text(-3, 0.1, "Egger's test for asymmetry:", adj = c(0,0), cex = cx)
@@ -330,12 +333,12 @@ box()
 dev.off()
 
 ## Test average residuals instead:
-regtest(data$resid, sei = data$se, model = "rma")
+#regtest(data$resid, sei = data$se, model = "rma")
 
-png("figures/funnel_carbon_resid.png", width = 7, height = 6, units = "in", res = 72)
-funnel(data$resid, sei = data$se, col = data$cls, pch = data$pchs, cex.lab = cx, cex = cx, cex.axis = cx, xlab = "Residuals", main = "Carbon stocks")
+#png("figures/funnel_carbon_resid.png", width = 7, height = 6, units = "in", res = 72)
+#funnel(data$resid, sei = data$se, col = data$cls, pch = data$pchs, cex.lab = cx, cex = cx, cex.axis = cx, xlab = "Residuals", main = "Carbon stocks")
 #legend("topleft", col = c("#ff3319", "#0057ba", "#ffab00", "black", "black"), pch = c(rep(16,4),17), cex  = cx, legend = c("Fire", "Drought", "Insects", "Measured SE", "Imputed SE"))
-text(1, 0.1, "Egger's test for asymmetry:", adj = c(0,0), cex = cx)
-text(1, 0.2, "z = 1.21, p = 0.227", adj = c(0,0), cex = cx)
-box()
-dev.off()
+#text(1, 0.1, "Egger's test for asymmetry:", adj = c(0,0), cex = cx)
+#text(1, 0.2, "z = 1.21, p = 0.227", adj = c(0,0), cex = cx)
+#box()
+#dev.off()
