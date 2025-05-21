@@ -24,3 +24,6 @@ source("code/figures/figure6.r") ## carbon
 
 ## climate
 source("code/figures/figure7.r")
+
+## publication bias
+source("code/03_publication_bias.r")
