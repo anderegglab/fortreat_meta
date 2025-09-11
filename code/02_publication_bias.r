@@ -406,9 +406,9 @@ dev.off()
 
 
 ##--------------------------------------------------------------
-## Macaskill's tests (more robust to small sample size and heterogeneity)                                                      
-##--------------------------------------------------------------
+## Macaskill's tests (more robust to small sample size and heterogeneity)                                                  ##--------------------------------------------------------------
 
+## for mortality
 data <- read.csv("data/processed_data/data_cleaned.csv")
 
 mort_imputed <- impute_data(data[data$carbon_vs_mortality == 2,], m = 100)
@@ -442,11 +442,11 @@ SE <- sqrt(T_var)
 t_stat <- beta_bar / SEX
 nu <- (M - 1) * (1 + U_bar / ((1 + 1/M) * B))^2
 p_val <- 2 * pt(abs(t_stat), df = nu, lower.tail = FALSE)
-p_val
+p_val ## overall p value
 
-beta_bar
+beta_bar ## overall effect size
 
-
+## for carbon
 mort_imputed <- impute_data(data[data$carbon_vs_mortality == 1,], m = 100)
 
 n <- data[data$carbon_vs_mortality == 1,"n_control"] + data[data$carbon_vs_mortality == 1,"n_treatment"]
@@ -477,7 +477,8 @@ SE <- sqrt(T_var)
 t_stat <- beta_bar / SE
 nu <- (M - 1) * (1 + U_bar / ((1 + 1/M) * B))^2
 p_val <- 2 * pt(abs(t_stat), df = nu, lower.tail = FALSE)
-p_val
 
-beta_bar
+p_val ## overall p value
+
+beta_bar ## overall effect size
 
