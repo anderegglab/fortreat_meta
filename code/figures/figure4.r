@@ -268,3 +268,11 @@ carbon_plot
 
 ggsave("figures/figure4B.png", width = 10, height = 4)
 ggsave("figures/illustrator/figure4B.pdf", width = 10, height = 4)
+
+
+median(data[data$trt_class == "thinning", "ba_removed"], na.rm = TRUE)
+
+median(data[data$trt_class == "rx_fire", "ba_removed"], na.rm = TRUE)
+
+median(data[data$trt_class == "both", "ba_removed"], na.rm = TRUE)
+

@@ -1,0 +1,26 @@
+## Gitignore
+
+## Emacs junk
+*~
+\#*\#
+
+## project.el
+.projects
+
+## Node junk (lsp/copilot)
+**/node_modules/
+**/package-lock.json
+**/package.json
+
+## Misc.
+*.elc
+.DS_Store
+
+## project files
+
+manuscript.docx
+manuscript.pdf
+
+
+
+

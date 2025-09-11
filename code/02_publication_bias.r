@@ -37,6 +37,36 @@ bias_tests <- lapply(mort_fit$analyses, function(mod) {
   regtest(mod, model = "rma")
 })
 
+
+## combine results using Rubin's rules
+M <- length(bias_tests)   # list of 100 regtest objects
+
+slopes <- numeric(M)
+vars   <- numeric(M)
+
+for (m in 1:M) {
+  obj <- bias_tests[[m]]
+  slopes[m] <- obj$fit$beta["sei", 1]
+  vars[m]   <- obj$fit$vb["sei", "sei"]
+}
+
+## Rubin's rules
+beta_bar <- mean(slopes)
+U_bar    <- mean(vars)
+B        <- var(slopes)
+T_var    <- U_bar + (1 + 1/M) * B
+SE       <- sqrt(T_var)
+t_stat   <- beta_bar / SE
+
+## Degrees of freedom (Barnard–Rubin)
+nu <- (M - 1) * (1 + U_bar / ((1 + 1/M) * B))^2
+
+## p-values
+p_val_t <- 2 * pt(abs(t_stat), df = nu, lower.tail = FALSE)
+p_val_t
+
+
+
 pvals <- sapply(bias_tests, function(x) if (!is.null(x)) x$pval else NA)
 hist(pvals, breaks = 100) ; abline(v = 0.05, col = "red", lwd = 4)
 summary(pvals, na.rm = TRUE)
@@ -299,6 +329,36 @@ bias_tests <- lapply(carbon_fit$analyses, function(mod) {
   regtest(mod, model = "rma")
 })
 
+
+
+## combine results using Rubin's rules
+M <- length(bias_tests)   # list of 100 regtest objects
+
+slopes <- numeric(M)
+vars   <- numeric(M)
+
+for (m in 1:M) {
+  obj <- bias_tests[[m]]
+  slopes[m] <- obj$fit$beta["sei", 1]
+  vars[m]   <- obj$fit$vb["sei", "sei"]
+}
+
+## Rubin's rules
+beta_bar <- mean(slopes)
+U_bar    <- mean(vars)
+B        <- var(slopes)
+T_var    <- U_bar + (1 + 1/M) * B
+SE       <- sqrt(T_var)
+t_stat   <- beta_bar / SE
+
+## Degrees of freedom (Barnard–Rubin)
+nu <- (M - 1) * (1 + U_bar / ((1 + 1/M) * B))^2
+
+## p-values
+p_val_t <- 2 * pt(abs(t_stat), df = nu, lower.tail = FALSE)
+p_val_t
+
+
 pvals <- sapply(bias_tests, function(x) if (!is.null(x)) x$pval else NA)
 hist(pvals, breaks = 100) ; abline(v = 0.05, col = "red", lwd = 4)
 summary(pvals, na.rm = TRUE)
@@ -342,3 +402,82 @@ dev.off()
 #text(1, 0.2, "z = 1.21, p = 0.227", adj = c(0,0), cex = cx)
 #box()
 #dev.off()
+
+
+
+##--------------------------------------------------------------
+## Macaskill's tests (more robust to small sample size and heterogeneity)                                                      
+##--------------------------------------------------------------
+
+data <- read.csv("data/processed_data/data_cleaned.csv")
+
+mort_imputed <- impute_data(data[data$carbon_vs_mortality == 2,], m = 100)
+plot(mort_imputed)
+
+n <- data[data$carbon_vs_mortality == 2,"n_control"] + data[data$carbon_vs_mortality == 2,"n_treatment"]
+yi <-data[data$carbon_vs_mortality == 2,"lrr"]
+vi <- data[data$carbon_vs_mortality == 2,"lrr_se"]^2
+
+ind <- which(is.na(vi))
+
+effect_size <- numeric(100)
+p <- numeric(100)
+vars <- numeric(100)
+for (i in 1:100) {
+    vi[ind] <- mort_imputed$imp$lrr_se[[i]]^2
+    s <- summary(lm(yi ~ n, weights = 1/vi))
+    effect_size[i] <- s$coefficients[2,1]
+    vars[i] <- s$coefficients[2,2]^2
+    p[i] <- s$coefficients[2,4]
+}
+
+M <- length(yi)
+
+beta_bar <- mean(effect_size)
+
+U_bar <- mean(vars)
+B <- var(effect_size)
+T_var <- U_bar + (1 + 1/M) * B
+SE <- sqrt(T_var)
+t_stat <- beta_bar / SEX
+nu <- (M - 1) * (1 + U_bar / ((1 + 1/M) * B))^2
+p_val <- 2 * pt(abs(t_stat), df = nu, lower.tail = FALSE)
+p_val
+
+beta_bar
+
+
+mort_imputed <- impute_data(data[data$carbon_vs_mortality == 1,], m = 100)
+
+n <- data[data$carbon_vs_mortality == 1,"n_control"] + data[data$carbon_vs_mortality == 1,"n_treatment"]
+yi <-data[data$carbon_vs_mortality == 1,"lrr"]
+vi <- data[data$carbon_vs_mortality == 1,"lrr_se"]^2
+
+ind <- which(is.na(vi))
+
+effect_size <- numeric(100)
+p <- numeric(100)
+vars <- numeric(100)
+for (i in 1:100) {
+    vi[ind] <- mort_imputed$imp$lrr_se[[i]]^2
+    s <- summary(lm(yi ~ n, weights = 1/vi))
+    effect_size[i] <- s$coefficients[2,1]
+    vars[i] <- s$coefficients[2,2]^2
+    p[i] <- s$coefficients[2,4]
+}
+
+M <- length(yi)
+
+beta_bar <- mean(effect_size)
+
+U_bar <- mean(vars)
+B <- var(effect_size)
+T_var <- U_bar + (1 + 1/M) * B
+SE <- sqrt(T_var)
+t_stat <- beta_bar / SE
+nu <- (M - 1) * (1 + U_bar / ((1 + 1/M) * B))^2
+p_val <- 2 * pt(abs(t_stat), df = nu, lower.tail = FALSE)
+p_val
+
+beta_bar
+

@@ -47,8 +47,7 @@ impute_data <- function(data, vars = c("lrr", "lrr_se", "disturbance_type"), m =
 
 }
 
-mort_imputed <- impute_data(data[data$carbon_vs_mortality == 2,], m = 100)
-plot(mort_imputed)
+
 
 mort_fit <- with(mort_imputed,
                  rma(yi = lrr,
