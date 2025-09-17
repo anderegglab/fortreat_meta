@@ -17,8 +17,10 @@
 .DS_Store
 
 ## project files
-
 manuscript.docx
 manuscript.pdf
+manuscript_v2.docx
+manuscript_v2.pdf
+*.docx
 
 
