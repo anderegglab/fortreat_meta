@@ -95,7 +95,7 @@ A <- ggplot(data[data$carbon_vs_mortality == 2, ]) +
   annotate("text", x = "Temperate Broadleaf and Mixed Forests", y = 17, label = "Temperate Broadleaf \n and Mixed Forests", size = 4) +
   annotate("text", x = "Temperate Conifer Forests", y = 105, label = "Temperate Conifer \n Forests", size = 4) +
   ggtitle("Biome Effects: Survivorship") +
-  scale_fill_manual(values = c(red, yellow, blue)) +
+  scale_fill_manual(values = c(red, blue, yellow)) +
   scale_y_continuous(expand = c(0,0), limits = c(0, 110)) +
   theme_bw() +
   theme(legend.position = "inside", legend.position.inside = c(0.1, 0.9), axis.text.x = element_blank(),
@@ -205,7 +205,7 @@ D <- ggplot() +
   annotate("text", x = 4.9, y = "fire", label = "*", size = 14) +
   scale_color_manual(values = c(red, blue)) +
   xlim(-1.2, 5) +
-  ggtitle("Mediterranean Forests, Woodlands and Scrub") +
+  ggtitle("Mediterranean Forests, Woodlands and Shrubs") +
   theme_bw() +
   theme(legend.position = "none", axis.title = element_blank())
 D
